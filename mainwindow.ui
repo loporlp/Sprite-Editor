@@ -27,14 +27,14 @@
     <property name="title">
      <string>Pixel Image Software Suite</string>
     </property>
-    <addaction name="actionHello"/>
+    <addaction name="actionSave"/>
    </widget>
    <addaction name="menuPixel_Image_Software_Sweet"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionHello">
+  <action name="actionSave">
    <property name="text">
-    <string>Hello</string>
+    <string>Save</string>
    </property>
   </action>
  </widget>
