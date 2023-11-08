@@ -104,6 +104,16 @@ void Model::CanvasSettings::setCanvasZoom(float newZoom)
     canvasZoom = newZoom;
 }
 
+uint Model::CanvasSettings::getCurrentFrameIndex()
+{
+    return indexOfCurrentFrame;
+}
+
+void Model::CanvasSettings::setCurrentFrameIndex(uint newIndex)
+{
+    indexOfCurrentFrame = newIndex;
+}
+
 QVector2D Model::CanvasSettings::screenSpaceToImageSpace(QVector2D &screenSpace)
 {
     qWarning("screenSpaceToImageSpace() not yet implemented");

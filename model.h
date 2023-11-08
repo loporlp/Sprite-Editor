@@ -55,6 +55,10 @@ public:
         /// serialized into our project file.
         float canvasZoom;
 
+        /// The index of the frame that we are currently displaying in the canvas.
+        /// An integer rather than a reference for easier serialization.
+        uint indexOfCurrentFrame;
+
     public:
         CanvasSettings(QVector2D canvasSize,
                        QVector2D canvasPosition = QVector2D(0.0, 0.0),
@@ -72,11 +76,11 @@ public:
         /// updates the `canvasZoom` to the provided `newZoom`
         void setCanvasZoom(float newZoom);
 
-        /// returns a reference to the frame we are currently displaying
-        QImage &getCurrentFrame();
+        /// returns the index of the frame we are currently displaying
+        uint getCurrentFrameIndex();
 
-        /// updates which frame we are currently displaying
-        void setCurrentFrame(QImage &frameToDisplay);
+        /// updates the index of which frame we are currently displaying
+        void setCurrentFrameIndex(uint newIndex);
 
         /// converts the screen space pixel coordinates provided to the
         /// coordinate space of the sprite the canvas is displaying.
