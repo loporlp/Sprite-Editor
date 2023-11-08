@@ -17,8 +17,8 @@
    <widget class="QFrame" name="canvas">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>170</y>
+      <x>280</x>
+      <y>140</y>
       <width>211</width>
       <height>171</height>
      </rect>
