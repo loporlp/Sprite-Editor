@@ -9,7 +9,7 @@ Model::Frames &Model::getFrames()
     return frames;
 }
 
-Model::CanvasSettings &Model::getCanvasSettings()
+Model::CanvasData &Model::getCanvasSettings()
 {
     return canvasSettings;
 }
@@ -37,7 +37,7 @@ uint Model::Frames::numFrames()
     return frames.size();
 }
 
-QImage &Model::Frames::getFrame(uint index)
+QImage &Model::Frames::get(uint index)
 {
     assert(frames.size() > index);
     return frames.at(index);
@@ -53,68 +53,66 @@ QImage &Model::Frames::last()
     return frames.back();
 }
 
-void Model::Frames::pushFrame(QImage frame)
+void Model::Frames::push(QImage frame)
 {
     frames.push_back(frame);
 }
 
-void Model::Frames::insertFrame(QImage frame, uint index)
+void Model::Frames::insert(QImage frame, uint index)
 {
     frames.insert(frames.begin() + index, frame);
 }
 
-void Model::Frames::deleteFrame(uint index)
+void Model::Frames::remove(uint index)
 {
     assert(frames.size() > index);
     frames.erase(frames.begin() + index);
 }
 
-void Model::Frames::popFrame()
+void Model::Frames::pop()
 {
     frames.pop_back();
 }
 
-//-----Model::CanvasSettings-----//
+//-----Model::CanvasData-----//
 
-Model::CanvasSettings::CanvasSettings(QVector2D canvasSize,
-                                      QVector2D canvasPosition,
-                                      float canvasZoom)
+Model::CanvasData::CanvasData(QVector2D canvasSize, QVector2D canvasPosition, float canvasZoom)
     : canvasPosition(canvasPosition)
     , canvasSize(canvasSize)
     , canvasZoom(canvasZoom)
 {}
 
-const QVector2D &Model::CanvasSettings::getCanvasPosition()
+const QVector2D &Model::CanvasData::getPosition()
 {
     return canvasPosition;
 }
 
-void Model::CanvasSettings::setCanvasPosition(QVector2D newPosition)
+void Model::CanvasData::setPosition(QVector2D newPosition)
 {
     canvasPosition = newPosition;
 }
 
-float Model::CanvasSettings::getCanvasZoom()
+float Model::CanvasData::getZoom()
 {
     return canvasZoom;
 }
 
-void Model::CanvasSettings::setCanvasZoom(float newZoom)
+void Model::CanvasData::setZoom(float newZoom)
 {
     canvasZoom = newZoom;
 }
 
-uint Model::CanvasSettings::getCurrentFrameIndex()
+uint Model::CanvasData::getCurrentFrameIndex()
 {
     return indexOfCurrentFrame;
 }
 
-void Model::CanvasSettings::setCurrentFrameIndex(uint newIndex)
+void Model::CanvasData::setCurrentFrameIndex(uint newIndex)
 {
     indexOfCurrentFrame = newIndex;
 }
 
-QVector2D Model::CanvasSettings::screenSpaceToImageSpace(QVector2D &screenSpace)
+QVector2D Model::CanvasData::screenSpaceToImageSpace(QVector2D &screenSpace)
 {
     qWarning("screenSpaceToImageSpace() not yet implemented");
     return QVector2D(0.0, 0.0);

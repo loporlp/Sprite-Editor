@@ -23,7 +23,7 @@ public:
         uint numFrames();
 
         /// returns a reference to the frame at index
-        QImage &getFrame(uint index);
+        QImage &get(uint index);
 
         /// returns a reference to the first frame of the animation
         QImage &first();
@@ -32,19 +32,19 @@ public:
         QImage &last();
 
         /// adds an image as the last frame of our animation.
-        void pushFrame(QImage frame);
+        void push(QImage frame);
 
         /// adds an image to our frame at `position`
-        void insertFrame(QImage frame, uint index);
+        void insert(QImage frame, uint index);
 
         /// deletes the frame at index `position`
-        void deleteFrame(uint index);
+        void remove(uint index);
 
         /// deletes the last frame of the animation
-        void popFrame();
+        void pop();
     };
 
-    class CanvasSettings
+    class CanvasData
     {
         /// Offset position of the canvas, to be modified by panning.
         /// Stored in model so it can be serialized into our project file.
@@ -60,21 +60,21 @@ public:
         uint indexOfCurrentFrame;
 
     public:
-        CanvasSettings(QVector2D canvasSize,
-                       QVector2D canvasPosition = QVector2D(0.0, 0.0),
-                       float canvasZoom = 1.0);
+        CanvasData(QVector2D canvasSize,
+                   QVector2D canvasPosition = QVector2D(0.0, 0.0),
+                   float canvasZoom = 1.0);
 
         /// returns a const reference to our canvas offset position.
-        const QVector2D &getCanvasPosition();
+        const QVector2D &getPosition();
 
         /// updates the `canvasPosition` to the provided `newPosition`
-        void setCanvasPosition(QVector2D newPosition);
+        void setPosition(QVector2D newPosition);
 
         /// returns the zoom factor of our canvas
-        float getCanvasZoom();
+        float getZoom();
 
         /// updates the `canvasZoom` to the provided `newZoom`
-        void setCanvasZoom(float newZoom);
+        void setZoom(float newZoom);
 
         /// returns the index of the frame we are currently displaying
         uint getCurrentFrameIndex();
@@ -91,7 +91,7 @@ private:
     Q_OBJECT
 
     Frames frames;
-    CanvasSettings canvasSettings;
+    CanvasData canvasSettings;
 
 public:
     explicit Model(QObject *parent = nullptr);
@@ -100,7 +100,7 @@ public:
     Frames &getFrames();
 
     /// returns a reference to our `CanvasSettings` class
-    CanvasSettings &getCanvasSettings();
+    CanvasData &getCanvasSettings();
 
 signals:
 };
