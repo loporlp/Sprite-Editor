@@ -1,13 +1,37 @@
 #include "model.h"
+#include <QImage>
 #include <QObject>
+#include <QPixmap>
+
+//-----Model-----//
+Model::Frames &Model::getFrames()
+{
+    return frames;
+}
+
+Model::CanvasSettings &Model::getCanvasSettings()
+{
+    return canvasSettings;
+}
 
 Model::Model(QObject *parent)
-    : QObject{parent}
-    , frames{Model::Frames()}
-    , canvasSettings{Model::CanvasSettings()}
+    : QObject(parent)
+    , frames()
+    , canvasSettings(QVector2D(frames.first().width(), frames.first().height()))
 {}
 
 //-----Model::Frames-----//
+
+Model::Frames::Frames(uint width, uint height)
+{
+    QImage defaultFrame = QPixmap(width, height).toImage();
+    frames.push_back(defaultFrame);
+}
+
+Model::Frames::Frames()
+    : Model::Frames::Frames(64, 64)
+{}
+
 uint Model::Frames::numFrames()
 {
     return frames.size();
@@ -17,6 +41,16 @@ QImage &Model::Frames::getFrame(uint index)
 {
     assert(frames.size() > index);
     return frames.at(index);
+}
+
+QImage &Model::Frames::first()
+{
+    return frames.front();
+}
+
+QImage &Model::Frames::last()
+{
+    return frames.back();
 }
 
 void Model::Frames::pushFrame(QImage frame)
@@ -41,6 +75,15 @@ void Model::Frames::popFrame()
 }
 
 //-----Model::CanvasSettings-----//
+
+Model::CanvasSettings::CanvasSettings(QVector2D canvasSize,
+                                      QVector2D canvasPosition,
+                                      float canvasZoom)
+    : canvasPosition(canvasPosition)
+    , canvasSize(canvasSize)
+    , canvasZoom(canvasZoom)
+{}
+
 const QVector2D &Model::CanvasSettings::getCanvasPosition()
 {
     return canvasPosition;
@@ -59,4 +102,10 @@ float Model::CanvasSettings::getCanvasZoom()
 void Model::CanvasSettings::setCanvasZoom(float newZoom)
 {
     canvasZoom = newZoom;
+}
+
+QVector2D Model::CanvasSettings::screenSpaceToImageSpace(QVector2D &screenSpace)
+{
+    qWarning("screenSpaceToImageSpace() not yet implemented");
+    return QVector2D(0.0, 0.0);
 }
