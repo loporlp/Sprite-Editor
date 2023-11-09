@@ -37,18 +37,18 @@ uint Model::Frames::numFrames()
     return frames.size();
 }
 
-QImage &Model::Frames::get(uint index)
+QImage Model::Frames::get(uint index)
 {
     assert(frames.size() > index);
     return frames.at(index);
 }
 
-QImage &Model::Frames::first()
+QImage Model::Frames::first()
 {
     return frames.front();
 }
 
-QImage &Model::Frames::last()
+QImage Model::Frames::last()
 {
     return frames.back();
 }

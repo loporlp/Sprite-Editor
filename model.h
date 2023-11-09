@@ -22,14 +22,14 @@ public:
         /// returns the number of frames in our current animation
         uint numFrames();
 
-        /// returns a reference to the frame at index
-        QImage &get(uint index);
+        /// returns the frame at index
+        QImage get(uint index);
 
-        /// returns a reference to the first frame of the animation
-        QImage &first();
+        /// returns the first frame of the animation
+        QImage first();
 
-        /// returns a reference to the last frame of the animation
-        QImage &last();
+        /// returns the last frame of the animation
+        QImage last();
 
         /// adds an image as the last frame of our animation.
         void push(QImage frame);
