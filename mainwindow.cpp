@@ -5,6 +5,9 @@
 #include <QLayout>
 #include <QObject>
 #include <QLabel>
+#include <QColor>
+#include <QApplication>
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -12,12 +15,15 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    QImage *image = new QImage();
+    QImage image(100, 100, QImage::Format_ARGB32);
+
+    image.fill(QColor(Qt::black));
+    image.setPixelColor(50, 50, QColor(Qt::white));
     //Replace with test image to see, I didn't want to add images to repo
     //image->load("C:\\Users\\mason\\OneDrive\\Pictures\\Screenshots\\Screenshot 2023-03-01 231609.png");
 
     QLabel *imageHolder = new QLabel("");
-    imageHolder->setPixmap(QPixmap::fromImage(image->scaled(100, 100, Qt::KeepAspectRatio)));
+    imageHolder->setPixmap(QPixmap::fromImage(image.scaled(100, 100, Qt::KeepAspectRatio)));
     auto layout = new QVBoxLayout();
     layout->addWidget(imageHolder);
     ui->canvas->setLayout(layout);
@@ -28,6 +34,11 @@ MainWindow::MainWindow(QWidget *parent)
                               "border-radius: 3;"
                               "border-style: solid;"
                               "border-color: rgb(10, 10, 10)}");
+
+    image.fill(QColor(Qt::black));
+
+    imageHolder->setPixmap(QPixmap::fromImage(image.scaled(100, 100, Qt::KeepAspectRatio)));
+    QTimer::singleShot(1000, this, SLOT(image.fill(QColor(Qt::white))));
 
 }
 
