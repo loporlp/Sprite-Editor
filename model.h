@@ -13,10 +13,10 @@ public:
         std::vector<QImage> frames;
 
     public:
-        /// initializes with 1 blank frame of dimension `width` x `height`
+        /// initializes with 1 blank white frame of dimension `width` x `height`
         Frames(uint width, uint height);
 
-        /// default initializer; contains only 1 blank 64x64 frame
+        /// default initializer; contains only 1 blank white 64x64 frame
         Frames();
 
         /// returns the number of frames in our current animation
