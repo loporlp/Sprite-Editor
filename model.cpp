@@ -25,6 +25,7 @@ Model::Model(QObject *parent)
 Model::Frames::Frames(uint width, uint height)
 {
     QImage defaultFrame = QPixmap(width, height).toImage();
+    defaultFrame.fill(QColor(qRgba(255, 255, 255, 255)));
     frames.push_back(defaultFrame);
 }
 
