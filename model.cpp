@@ -25,14 +25,19 @@ Model::Model(QObject *parent)
 
 Model::Frames::Frames(uint width, uint height)
 {
-    QImage defaultFrame(width, height, QImage::Format_ARGB32);
-    defaultFrame.fill(QColor(Qt::black));
-    frames.push_back(defaultFrame);
+    generateFrame(width, height);
 }
 
 Model::Frames::Frames()
     : Model::Frames::Frames(100, 100)
 {}
+
+void Model::Frames::generateFrame(int width, int height)
+{
+    QImage defaultFrame(width, height, QImage::Format_RGB32);
+    defaultFrame.fill(QColor(Qt::white));
+    frames.push_back(defaultFrame);
+}
 
 uint Model::Frames::numFrames()
 {
@@ -78,6 +83,8 @@ void Model::Frames::pop()
 
 void Model::Frames::drawTest(QImage &frame, int x, int y, QColor color)
 {
+    // TODO - see about changing this to setPixel, as we can set the color to a qRgb rather than
+    // a QColor. This will likely be more friendly to the color selection tool implemented in the UI branch.
     frame.setPixelColor(x, y, color);
 }
 
@@ -87,7 +94,9 @@ Model::CanvasData::CanvasData(QVector2D canvasSize, QVector2D canvasPosition, fl
     : canvasPosition(canvasPosition)
     , canvasSize(canvasSize)
     , canvasZoom(canvasZoom)
-{}
+{
+    indexOfCurrentFrame = 0;
+}
 
 const QVector2D &Model::CanvasData::getPosition()
 {

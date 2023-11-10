@@ -22,8 +22,9 @@ private:
 protected:
     virtual void mousePressEvent(QMouseEvent *event);
     virtual void mouseMoveEvent(QMouseEvent *event);
-    virtual void mouseReleaseEvent(QMouseEvent *event);
-    void drawOnEvent();
+
+    /// helper method to draw when a mouse occurs.
+    void drawOnEvent(QMouseEvent *event);
 
 
 };

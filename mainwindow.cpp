@@ -10,6 +10,7 @@
 #include <QApplication>
 #include <QTimer>
 #include <QMouseEvent>
+#include <QPainter>
 #include <iostream>
 
 MainWindow::MainWindow(Model& model, QWidget *parent)
@@ -18,26 +19,26 @@ MainWindow::MainWindow(Model& model, QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    setMouseTracking(true);
 
-    QImage image = windowModel.getFrames().get(0);
+    // get the default frame from the model's frame container for use in initialization of the drawing canvas.
+    QImage image = windowModel.getFrames().get(windowModel.getCanvasSettings().getCurrentFrameIndex());
 
-    // this is a zoom to help fit the frame to the image holder label.
+    // Replace imageHolder height / width with zoom factor, when implementation begins.
     ui->imageHolder->setPixmap(QPixmap::fromImage(image.scaled(ui->imageHolder->width(), ui->imageHolder->height(), Qt::KeepAspectRatio)));
     ui->imageHolder->setAlignment(Qt::AlignCenter);
+
+    // initialize the layout and add the canvas to the layout
     auto layout = new QVBoxLayout();
     layout->addWidget(ui->imageHolder);
     ui->canvas->setLayout(layout);
 
+    // stylize the canvas within the layout
     ui->canvas->setLineWidth(3);
     ui->canvas->setStyleSheet("QFrame {background-color: rgb(200, 255, 255);"
                               "border-width: 1;"
                               "border-radius: 3;"
                               "border-style: solid;"
                               "border-color: rgb(10, 10, 10)}");
-
-    QTimer::singleShot(1000, this, SLOT(image.fill(QColor(Qt::white))));
-
     }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
@@ -45,34 +46,50 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 
     event->accept();
 
-    drawOnEvent();
+    drawOnEvent(event);
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
-
     event->accept();
 
-    drawOnEvent();
+    drawOnEvent(event);
 }
 
-void MainWindow::mouseReleaseEvent(QMouseEvent *event)
-{
-    // TODO - correctly update the pixel map
-}
+void MainWindow::drawOnEvent(QMouseEvent *event) {
 
-void MainWindow::drawOnEvent() {
 
+    // get x,y coordinates of the image holder label
     int xval = ui->imageHolder->mapFromGlobal(ui->imageHolder->cursor().pos()).x();
     int yval = ui->imageHolder->mapFromGlobal(ui->imageHolder->cursor().pos()).y();
+
+    // scale the x,y coordinates relative to the zoom.
+    // NOTE: currently assumes zoom is the imageholder width/height - change to zoom factor when implemented
     int xval_zoom = xval / (ui->imageHolder->width() / 100);
     int yval_zoom = yval / (ui->imageHolder->width() / 100);
 
+    // check to ascertain the cursor is within the QImage holder widget.
     if((xval > 0 && yval > 0) && (xval < ui->imageHolder->width() && yval < ui->imageHolder->height())) {
-        QImage image = windowModel.getFrames().get(0);
-        windowModel.getFrames().drawTest(image, xval_zoom, yval_zoom, QColor(Qt::white));
+
+        uint currentFrame = windowModel.getCanvasSettings().getCurrentFrameIndex();
+        QImage &image = windowModel.getFrames().get(currentFrame);
+
+        // Below is part of the "Proof of concept". For the actual implementation, we will need
+        // to add a check to whichever color(s) the user has selected, passing those instead of these hardcoded colors.
+        if(event->buttons() == Qt::RightButton) {
+            windowModel.getFrames().drawTest(image, xval_zoom, yval_zoom, QColor(Qt::red));
+        } else if (event->buttons() == Qt::LeftButton) {
+            windowModel.getFrames().drawTest(image, xval_zoom, yval_zoom, QColor(Qt::blue));
+        } else {
+            windowModel.getFrames().drawTest(image, xval_zoom, yval_zoom, QColor(Qt::green));
+        }
+
+        // this updates the label pixmap and scales it. It is currently scaled to the size of the image Holder
         ui->imageHolder->setPixmap(QPixmap::fromImage(image.scaled(ui->imageHolder->width(), ui->imageHolder->height(), Qt::KeepAspectRatio)));
-        qDebug() << "(" << xval << "," << yval << ")";
+
+        // DEBUGGING:
+        // qDebug() << "NO ZOOM: " << "(" << xval << "," << yval << ")";
+        // qDebug() << "ZOOM: " << "(" << xval_zoom << "," << yval_zoom << ")";
     }
 }
 

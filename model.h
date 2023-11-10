@@ -12,7 +12,6 @@ public:
     class Frames
     {
         std::vector<QImage> frames;
-        qint32 currentFrame;
 
     public:
         /// initializes with 1 blank white frame of dimension `width` x `height`
@@ -33,8 +32,11 @@ public:
         /// returns the last frame of the animation
         QImage last();
 
+        /// Generates a blank white frame of size width x height
+        void generateFrame(int width, int height);
+
         /// temporary drawing function type beat
-        void drawTest(QImage &frame, int x, int y, QColor);
+        void drawTest(QImage &frame, int x, int y, QColor color);
 
         /// adds an image as the last frame of our animation.
         void push(QImage frame);
