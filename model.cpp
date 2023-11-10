@@ -1,5 +1,4 @@
 #include "model.h"
-#include "mainwindow.h"
 #include <QImage>
 #include <QLabel>
 #include <QObject>
