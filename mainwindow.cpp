@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "model.h"
 #include <QPushButton>
 #include <QImage>
 #include <QLayout>
@@ -8,24 +9,24 @@
 #include <QColor>
 #include <QApplication>
 #include <QTimer>
+#include <QMouseEvent>
+#include <iostream>
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(Model& model, QWidget *parent)
     : QMainWindow(parent)
+    , windowModel(model)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setMouseTracking(true);
 
-    QImage image(100, 100, QImage::Format_ARGB32);
+    QImage image = windowModel.getFrames().get(0);
 
-    image.fill(QColor(Qt::black));
-    image.setPixelColor(50, 50, QColor(Qt::white));
-    //Replace with test image to see, I didn't want to add images to repo
-    //image->load("C:\\Users\\mason\\OneDrive\\Pictures\\Screenshots\\Screenshot 2023-03-01 231609.png");
-
-    QLabel *imageHolder = new QLabel("");
-    imageHolder->setPixmap(QPixmap::fromImage(image.scaled(100, 100, Qt::KeepAspectRatio)));
+    // this is a zoom to help fit the frame to the image holder label.
+    ui->imageHolder->setPixmap(QPixmap::fromImage(image.scaled(ui->imageHolder->width(), ui->imageHolder->height(), Qt::KeepAspectRatio)));
+    ui->imageHolder->setAlignment(Qt::AlignCenter);
     auto layout = new QVBoxLayout();
-    layout->addWidget(imageHolder);
+    layout->addWidget(ui->imageHolder);
     ui->canvas->setLayout(layout);
 
     ui->canvas->setLineWidth(3);
@@ -35,15 +36,48 @@ MainWindow::MainWindow(QWidget *parent)
                               "border-style: solid;"
                               "border-color: rgb(10, 10, 10)}");
 
-    image.fill(QColor(Qt::black));
-
-    imageHolder->setPixmap(QPixmap::fromImage(image.scaled(100, 100, Qt::KeepAspectRatio)));
     QTimer::singleShot(1000, this, SLOT(image.fill(QColor(Qt::white))));
 
+    }
+
+void MainWindow::mousePressEvent(QMouseEvent *event)
+    {
+
+    event->accept();
+
+    drawOnEvent();
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent *event)
+{
+
+    event->accept();
+
+    drawOnEvent();
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent *event)
+{
+    // TODO - correctly update the pixel map
+}
+
+void MainWindow::drawOnEvent() {
+
+    int xval = ui->imageHolder->mapFromGlobal(ui->imageHolder->cursor().pos()).x();
+    int yval = ui->imageHolder->mapFromGlobal(ui->imageHolder->cursor().pos()).y();
+    int xval_zoom = xval / (ui->imageHolder->width() / 100);
+    int yval_zoom = yval / (ui->imageHolder->width() / 100);
+
+    if((xval > 0 && yval > 0) && (xval < ui->imageHolder->width() && yval < ui->imageHolder->height())) {
+        QImage image = windowModel.getFrames().get(0);
+        windowModel.getFrames().drawTest(image, xval_zoom, yval_zoom, QColor(Qt::white));
+        ui->imageHolder->setPixmap(QPixmap::fromImage(image.scaled(ui->imageHolder->width(), ui->imageHolder->height(), Qt::KeepAspectRatio)));
+        qDebug() << "(" << xval << "," << yval << ")";
+    }
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-}
+    }
 

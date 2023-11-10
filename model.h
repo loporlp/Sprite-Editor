@@ -4,6 +4,7 @@
 #include <QImage>
 #include <QObject>
 #include <QVector2D>
+#include <QLabel>
 
 class Model : public QObject
 {
@@ -11,6 +12,7 @@ public:
     class Frames
     {
         std::vector<QImage> frames;
+        qint32 currentFrame;
 
     public:
         /// initializes with 1 blank white frame of dimension `width` x `height`
@@ -23,13 +25,16 @@ public:
         uint numFrames();
 
         /// returns the frame at index
-        QImage get(uint index);
+        QImage& get(uint index);
 
         /// returns the first frame of the animation
         QImage first();
 
         /// returns the last frame of the animation
         QImage last();
+
+        /// temporary drawing function type beat
+        void drawTest(QImage &frame, int x, int y, QColor);
 
         /// adds an image as the last frame of our animation.
         void push(QImage frame);
