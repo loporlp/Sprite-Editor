@@ -1,4 +1,5 @@
 #include "model.h"
+#include "mainwindow.h"
 #include <QImage>
 #include <QLabel>
 #include <QObject>
@@ -81,11 +82,9 @@ void Model::Frames::pop()
     frames.pop_back();
 }
 
-void Model::Frames::drawTest(QImage &frame, int x, int y, QColor color)
+void Model::Frames::setFramePixel(QImage &frame, int x, int y, uint color)
 {
-    // TODO - see about changing this to setPixel, as we can set the color to a qRgb rather than
-    // a QColor. This will likely be more friendly to the color selection tool implemented in the UI branch.
-    frame.setPixelColor(x, y, color);
+    frame.setPixel(x, y, color);
 }
 
 //-----Model::CanvasData-----//

@@ -36,7 +36,7 @@ public:
         void generateFrame(int width, int height);
 
         /// temporary drawing function type beat
-        void drawTest(QImage &frame, int x, int y, QColor color);
+        void setFramePixel(QImage &frame, int x, int y, uint color);
 
         /// adds an image as the last frame of our animation.
         void push(QImage frame);

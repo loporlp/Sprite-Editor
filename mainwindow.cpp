@@ -77,11 +77,11 @@ void MainWindow::drawOnEvent(QMouseEvent *event) {
         // Below is part of the "Proof of concept". For the actual implementation, we will need
         // to add a check to whichever color(s) the user has selected, passing those instead of these hardcoded colors.
         if(event->buttons() == Qt::RightButton) {
-            windowModel.getFrames().drawTest(image, xval_zoom, yval_zoom, QColor(Qt::red));
+            windowModel.getFrames().setFramePixel(image, xval_zoom, yval_zoom, qRgb(255, 0, 0));
         } else if (event->buttons() == Qt::LeftButton) {
-            windowModel.getFrames().drawTest(image, xval_zoom, yval_zoom, QColor(Qt::blue));
+            windowModel.getFrames().setFramePixel(image, xval_zoom, yval_zoom, qRgb(0, 0, 255));
         } else {
-            windowModel.getFrames().drawTest(image, xval_zoom, yval_zoom, QColor(Qt::green));
+            windowModel.getFrames().setFramePixel(image, xval_zoom, yval_zoom, qRgb(0, 255, 0));
         }
 
         // this updates the label pixmap and scales it. It is currently scaled to the size of the image Holder
