@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/Icons">
+        <file>Icons/addIcon.png</file>
+        <file>Icons/bucketIcon.png</file>
+        <file>Icons/colorIcon.png</file>
+        <file>Icons/deleteIcon.png</file>
+        <file>Icons/eraserIcon.png</file>
+        <file>Icons/eyedropIcon.png</file>
+        <file>Icons/pauseIcon.png</file>
+        <file>Icons/penIcon.png</file>
+        <file>Icons/playIcon.png</file>
+        <file>Icons/redoIcon.png</file>
+        <file>Icons/undoIcon.png</file>
+        <file>Icons/zoomInIcon.png</file>
+        <file>Icons/zoomOutIcon.png</file>
+    </qresource>
+</RCC>
