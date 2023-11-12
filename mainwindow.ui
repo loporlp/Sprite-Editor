@@ -1090,12 +1090,16 @@
      <string>Actual Size</string>
     </property>
    </widget>
-  <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_3">
-    <item>
-     <widget class="Canvas" name="canvas" native="true"/>
-    </item>
-   </layout>
+   <widget class="Canvas" name="canvas" native="true">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>50</y>
+      <width>400</width>
+      <height>400</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -1103,7 +1107,6 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>23</height>
      <height>43</height>
     </rect>
    </property>
@@ -1190,8 +1193,8 @@
      <rect>
       <x>277</x>
       <y>103</y>
-      <width>155</width>
-      <height>125</height>
+      <width>110</width>
+      <height>88</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -1293,9 +1296,6 @@
    </property>
   </action>
  </widget>
- <resources>
-  <include location="res.qrc"/>
- </resources>
  <customwidgets>
   <customwidget>
    <class>Canvas</class>
@@ -1304,5 +1304,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>

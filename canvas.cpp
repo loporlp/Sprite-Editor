@@ -9,7 +9,7 @@ Canvas::Canvas(QWidget *parent)
     : QWidget{parent}
     , imageHolder{new QLabel(this)}
     , canvasSize(QPoint(0, 0))
-    , offset(QPoint(50, 0))
+    , offset(QPoint(0, 0))
     , scaleFactor(8)
 {
     this->setStyleSheet("QWidget {background-color: rgb(200, 255, 255)}");
