@@ -5,15 +5,16 @@
 #include "model.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui {
+class MainWindow;
+}
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
-    Model& windowModel;
     Q_OBJECT
 public:
-    MainWindow(Model& model, QWidget *parent = nullptr);
+    MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private:
@@ -25,7 +26,5 @@ protected:
 
     /// helper method to draw when a mouse occurs.
     void drawOnEvent(QMouseEvent *event);
-
-
 };
 #endif // MAINWINDOW_H
