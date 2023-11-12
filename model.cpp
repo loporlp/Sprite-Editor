@@ -1,5 +1,6 @@
 #include "model.h"
 #include <QImage>
+#include <QLabel>
 #include <QObject>
 #include <QPixmap>
 
@@ -24,21 +25,26 @@ Model::Model(QObject *parent)
 
 Model::Frames::Frames(uint width, uint height)
 {
-    QImage defaultFrame = QPixmap(width, height).toImage();
-    defaultFrame.fill(QColor(qRgba(255, 255, 255, 255)));
-    frames.push_back(defaultFrame);
+    generateFrame(width, height);
 }
 
 Model::Frames::Frames()
-    : Model::Frames::Frames(64, 64)
+    : Model::Frames::Frames(100, 100)
 {}
+
+void Model::Frames::generateFrame(int width, int height)
+{
+    QImage defaultFrame(width, height, QImage::Format_RGB32);
+    defaultFrame.fill(QColor(Qt::white));
+    frames.push_back(defaultFrame);
+}
 
 uint Model::Frames::numFrames()
 {
     return frames.size();
 }
 
-QImage Model::Frames::get(uint index)
+QImage& Model::Frames::get(uint index)
 {
     assert(frames.size() > index);
     return frames.at(index);
@@ -75,13 +81,20 @@ void Model::Frames::pop()
     frames.pop_back();
 }
 
+void Model::Frames::setFramePixel(QImage &frame, int x, int y, uint color)
+{
+    frame.setPixel(x, y, color);
+}
+
 //-----Model::CanvasData-----//
 
 Model::CanvasData::CanvasData(QVector2D canvasSize, QVector2D canvasPosition, float canvasZoom)
     : canvasPosition(canvasPosition)
     , canvasSize(canvasSize)
     , canvasZoom(canvasZoom)
-{}
+{
+    indexOfCurrentFrame = 0;
+}
 
 const QVector2D &Model::CanvasData::getPosition()
 {

@@ -10,12 +10,14 @@ CONFIG += c++17
 
 SOURCES += \
     controller.cpp \
+    canvas.cpp \
     main.cpp \
     mainwindow.cpp \
     model.cpp
 
 HEADERS += \
     controller.h \
+    canvas.h \
     mainwindow.h \
     model.h
 
