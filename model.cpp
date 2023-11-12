@@ -29,7 +29,7 @@ Model::Frames::Frames(uint width, uint height)
 }
 
 Model::Frames::Frames()
-    : Model::Frames::Frames(100, 100)
+    : Model::Frames::Frames(64, 64)
 {}
 
 void Model::Frames::generateFrame(int width, int height)
@@ -81,20 +81,14 @@ void Model::Frames::pop()
     frames.pop_back();
 }
 
-void Model::Frames::setFramePixel(QImage &frame, int x, int y, uint color)
-{
-    frame.setPixel(x, y, color);
-}
-
 //-----Model::CanvasData-----//
 
 Model::CanvasData::CanvasData(QVector2D canvasSize, QVector2D canvasPosition, float canvasZoom)
     : canvasPosition(canvasPosition)
     , canvasSize(canvasSize)
     , canvasZoom(canvasZoom)
-{
-    indexOfCurrentFrame = 0;
-}
+    , indexOfCurrentFrame(0)
+{}
 
 const QVector2D &Model::CanvasData::getPosition()
 {

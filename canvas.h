@@ -14,14 +14,17 @@ QT_END_NAMESPACE
 
 class Canvas : public QWidget
 {
-    QVector2D canvasSize;
     Q_OBJECT
     QLabel *imageHolder;
-    QImage imageToDisplay;
+    QVector2D canvasSize;
+    float scaleFactor;
+    QImage *imageToDisplay;
 
 public:
     explicit Canvas(QWidget *parent = nullptr);
-    void setImage(QImage image);
+    void setImage(QImage *image);
+    void setScale(float);
+    void update();
 
 protected:
     void mousePressEvent(QMouseEvent *event);
@@ -29,7 +32,6 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
 
 private:
-    void updateDisplayTransform();
     QPoint canvasToSpriteSpace(QPoint canvasSpace);
 
 signals:

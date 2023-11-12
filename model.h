@@ -35,9 +35,6 @@ public:
         /// Generates a blank white frame of size width x height
         void generateFrame(int width, int height);
 
-        /// temporary drawing function type beat
-        void setFramePixel(QImage &frame, int x, int y, uint color);
-
         /// adds an image as the last frame of our animation.
         void push(QImage frame);
 

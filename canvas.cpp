@@ -5,10 +5,11 @@
 
 Canvas::Canvas(QWidget *parent)
     : QWidget{parent}
-    , canvasSize(QVector2D(0, 0))
     , imageHolder{new QLabel(this)}
+    , canvasSize(QVector2D(0, 0))
+    , scaleFactor(5)
 {
-    imageHolder->setAlignment(Qt::AlignCenter);
+    imageHolder->setAlignment(Qt::AlignLeft);
     QVBoxLayout *layout = new QVBoxLayout();
     layout->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(imageHolder);
@@ -17,39 +18,38 @@ Canvas::Canvas(QWidget *parent)
     this->setStyleSheet("QWidget {background-color: rgb(200, 255, 255)}");
 }
 
-void Canvas::setImage(QImage image)
+void Canvas::setImage(QImage *image)
 {
     imageToDisplay = image;
-    updateDisplayTransform();
+    canvasSize = QVector2D(image->width(), image->height());
+    update();
 }
 
-void Canvas::updateDisplayTransform()
+void Canvas::update()
 {
-    QImage scaled = imageToDisplay.scaled(imageHolder->width(), imageHolder->height());
+    QImage scaled = imageToDisplay->scaled(canvasSize.x() * scaleFactor,
+                                           canvasSize.y() * scaleFactor,
+                                           Qt::KeepAspectRatio);
+
     imageHolder->setPixmap(QPixmap::fromImage(scaled));
 }
 
 void Canvas::mousePressEvent(QMouseEvent *event)
 {
-    qDebug() << "clicked: " << event->pos().x() << ", " << event->pos().y();
     emit canvasMousePressed(canvasToSpriteSpace(event->pos()));
 }
 
 void Canvas::mouseMoveEvent(QMouseEvent *event)
 {
-    qDebug() << "moved: " << event->pos().x() << ", " << event->pos().y();
     emit canvasMouseMoved(canvasToSpriteSpace(event->pos()));
 }
 
 void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
-    qDebug() << "released: " << event->pos().x() << ", " << event->pos().y();
     emit canvasMouseReleased(canvasToSpriteSpace(event->pos()));
 }
 
 QPoint Canvas::canvasToSpriteSpace(QPoint canvasSpace)
 {
-    // NOTE: currently assumes zoom is the imageholder width/height - change to zoom factor when implemented
-    return QPoint(canvasSpace.x() / imageHolder->width() / 100,
-                  canvasSpace.y() / imageHolder->width() / 100);
+    return canvasSpace / scaleFactor;
 }

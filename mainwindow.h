@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "model.h"
+#include "canvas.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -17,14 +17,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    Canvas *canvas();
+
 private:
     Ui::MainWindow *ui;
-
-protected:
-    virtual void mousePressEvent(QMouseEvent *event);
-    virtual void mouseMoveEvent(QMouseEvent *event);
-
-    /// helper method to draw when a mouse occurs.
-    void drawOnEvent(QMouseEvent *event);
 };
 #endif // MAINWINDOW_H

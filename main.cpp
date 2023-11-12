@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     Model m;
     MainWindow w;
-    Controller c(m, w);
     w.show();
+    Controller c(m, w);
     return a.exec();
 }
