@@ -16,7 +16,8 @@ class Canvas : public QWidget
 {
     Q_OBJECT
     QLabel *imageHolder;
-    QVector2D canvasSize;
+    QPoint canvasSize;
+    QPoint offset;
     float scaleFactor;
     QImage *imageToDisplay;
 
@@ -24,6 +25,7 @@ public:
     explicit Canvas(QWidget *parent = nullptr);
     void setImage(QImage *image);
     void setScale(float);
+    void setOffset(QPoint);
     void update();
 
 protected:

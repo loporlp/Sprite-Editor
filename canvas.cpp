@@ -1,52 +1,63 @@
 #include "canvas.h"
 #include <QLabel>
 #include <QMouseEvent>
+#include <QStyle>
+#include <QTransform>
 #include <QVBoxLayout>
 
 Canvas::Canvas(QWidget *parent)
     : QWidget{parent}
     , imageHolder{new QLabel(this)}
-    , canvasSize(QVector2D(0, 0))
-    , scaleFactor(5)
+    , canvasSize(QPoint(0, 0))
+    , offset(QPoint(50, 0))
+    , scaleFactor(8)
 {
-    imageHolder->setAlignment(Qt::AlignLeft);
-    QVBoxLayout *layout = new QVBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->addWidget(imageHolder);
-    this->setLayout(layout);
-
     this->setStyleSheet("QWidget {background-color: rgb(200, 255, 255)}");
 }
 
 void Canvas::setImage(QImage *image)
 {
     imageToDisplay = image;
-    canvasSize = QVector2D(image->width(), image->height());
+    canvasSize = QPoint(image->width(), image->height());
     update();
+}
+
+void Canvas::setScale(float newScale)
+{
+    scaleFactor = newScale;
+}
+
+void Canvas::setOffset(QPoint newOffset)
+{
+    offset = newOffset;
 }
 
 void Canvas::update()
 {
-    QImage scaled = imageToDisplay->scaled(canvasSize.x() * scaleFactor,
-                                           canvasSize.y() * scaleFactor,
-                                           Qt::KeepAspectRatio);
+    QTransform imageTransformation;
+    imageTransformation.scale(scaleFactor, scaleFactor);
 
-    imageHolder->setPixmap(QPixmap::fromImage(scaled));
+    imageHolder->setPixmap(QPixmap::fromImage(*imageToDisplay).transformed(imageTransformation));
+    imageHolder->setGeometry(offset.x(),
+                             offset.y(),
+                             canvasSize.x() * scaleFactor,
+                             canvasSize.y() * scaleFactor);
 }
 
 void Canvas::mousePressEvent(QMouseEvent *event)
 {
-    emit canvasMousePressed(canvasToSpriteSpace(event->pos()));
+    // should probably introduce some bounds checking here
+    emit canvasMousePressed(canvasToSpriteSpace(event->pos() - offset));
 }
 
 void Canvas::mouseMoveEvent(QMouseEvent *event)
 {
-    emit canvasMouseMoved(canvasToSpriteSpace(event->pos()));
+    emit canvasMouseMoved(canvasToSpriteSpace(event->pos() - offset));
 }
 
 void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
-    emit canvasMouseReleased(canvasToSpriteSpace(event->pos()));
+    emit canvasMouseReleased(canvasToSpriteSpace(event->pos() - offset));
 }
 
 QPoint Canvas::canvasToSpriteSpace(QPoint canvasSpace)
