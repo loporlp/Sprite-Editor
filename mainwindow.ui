@@ -1090,6 +1090,12 @@
      <string>Actual Size</string>
     </property>
    </widget>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
+    <item>
+     <widget class="Canvas" name="canvas" native="true"/>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -1098,6 +1104,7 @@
      <y>0</y>
      <width>800</width>
      <height>23</height>
+     <height>43</height>
     </rect>
    </property>
    <property name="baseSize">
@@ -1289,5 +1296,13 @@
  <resources>
   <include location="res.qrc"/>
  </resources>
+ <customwidgets>
+  <customwidget>
+   <class>Canvas</class>
+   <extends>QWidget</extends>
+   <header>canvas.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <connections/>
 </ui>

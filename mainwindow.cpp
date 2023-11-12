@@ -46,6 +46,11 @@ MainWindow::MainWindow(QWidget *parent)
     connectFileActions();
 }
 
+Canvas *MainWindow::canvas()
+{
+    return this->ui->canvas;
+}
+
 MainWindow::~MainWindow()
 {
     delete ui;

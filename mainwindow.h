@@ -20,11 +20,17 @@
 #include <QProcess>
 
 #include "ui_mainwindow.h"
+#include "canvas.h"
+
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class MainWindow;
+}
+QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
 public:
     // Constructor for the MainWindow class
     explicit MainWindow(QWidget *parent = nullptr);
@@ -34,6 +40,7 @@ public:
 
     // Tool enums
     enum Tool{ Pen, Eraser, Fill, Eyedrop, Bucket };
+    Canvas *canvas();
 
 signals:
     // Tool related signals
@@ -80,7 +87,7 @@ private slots:
     void saveFileAction();
     void openFileAction();
     void newFileAction();
-
+    
 private:
     Ui::MainWindow *ui;
 

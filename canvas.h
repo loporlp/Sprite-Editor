@@ -1,0 +1,45 @@
+#ifndef CANVAS_H
+#define CANVAS_H
+
+#include <QImage>
+#include <QLabel>
+#include <QMouseEvent>
+#include <QWidget>
+
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class Canvas;
+}
+QT_END_NAMESPACE
+
+class Canvas : public QWidget
+{
+    Q_OBJECT
+    QLabel *imageHolder;
+    QPoint canvasSize;
+    QPoint offset;
+    float scaleFactor;
+    QImage *imageToDisplay;
+
+public:
+    explicit Canvas(QWidget *parent = nullptr);
+    void setImage(QImage *image);
+    void setScale(float);
+    void setOffset(QPoint);
+    void update();
+
+protected:
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+
+private:
+    QPoint canvasToSpriteSpace(QPoint canvasSpace);
+
+signals:
+    void canvasMousePressed(QPoint spriteMouseLocation);
+    void canvasMouseMoved(QPoint spriteMouseLocation);
+    void canvasMouseReleased(QPoint spriteMouseLocation);
+};
+
+#endif // CANVAS_H
