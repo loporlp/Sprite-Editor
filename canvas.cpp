@@ -2,7 +2,6 @@
 #include <QLabel>
 #include <QMouseEvent>
 #include <QStyle>
-#include <QTransform>
 #include <QVBoxLayout>
 
 Canvas::Canvas(QWidget *parent)
@@ -10,7 +9,7 @@ Canvas::Canvas(QWidget *parent)
     , imageHolder{new QLabel(this)}
     , canvasSize(QPoint(0, 0))
     , offset(QPoint(0, 0))
-    , scaleFactor(8)
+    , scaleFactor(2)
 {
     this->setStyleSheet("QWidget {background-color: rgb(200, 255, 255)}");
 }
@@ -34,10 +33,10 @@ void Canvas::setOffset(QPoint newOffset)
 
 void Canvas::update()
 {
-    QTransform imageTransformation;
-    imageTransformation.scale(scaleFactor, scaleFactor);
+    QImage scaled = imageToDisplay->scaled(canvasSize.x() * scaleFactor,
+                                           canvasSize.y() * scaleFactor);
 
-    imageHolder->setPixmap(QPixmap::fromImage(*imageToDisplay).transformed(imageTransformation));
+    imageHolder->setPixmap(QPixmap::fromImage(scaled));
     imageHolder->setGeometry(offset.x(),
                              offset.y(),
                              canvasSize.x() * scaleFactor,
