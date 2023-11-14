@@ -20,7 +20,7 @@ class Canvas : public QWidget
     QPoint canvasSize;
     QPoint offset;
     float scaleFactor;
-    QImage *imageToDisplay;
+
 
 public:
     explicit Canvas(QWidget *parent = nullptr);
@@ -28,6 +28,7 @@ public:
     void setScale(float);
     void setOffset(QPoint);
     void update();
+    QImage *imageToDisplay;
 
 protected:
     void mousePressEvent(QMouseEvent *event);
@@ -36,6 +37,7 @@ protected:
     void wheelEvent(QWheelEvent *event);
     bool event(QEvent *event);
     void keyPressEvent(QKeyEvent *event);
+
 
 private:
     QPoint canvasToSpriteSpace(QPoint canvasSpace);
@@ -46,6 +48,8 @@ signals:
     void canvasMousePressed(QPoint spriteMouseLocation);
     void canvasMouseMoved(QPoint spriteMouseLocation);
     void canvasMouseReleased(QPoint spriteMouseLocation);
+
+
 };
 
 #endif // CANVAS_H

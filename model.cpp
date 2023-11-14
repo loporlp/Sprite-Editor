@@ -46,7 +46,7 @@ uint Model::Frames::numFrames()
     return frames.size();
 }
 
-QImage& Model::Frames::get(uint index)
+QImage &Model::Frames::get(uint index)
 {
     assert(frames.size() > index);
     return frames.at(index);
@@ -83,16 +83,26 @@ void Model::Frames::pop()
     frames.pop_back();
 }
 
-void Model::addUndoStack()
+void Model::addUndoStack(QImage* image)
 {
-    undoBuffer.push_back(getFrames().get(getCanvasSettings().getCurrentFrameIndex()));
+    QImage imageToAdd = image->copy();
+    qDebug() << "ADDED TO BUFFER";
+    undoBuffer.push_back(imageToAdd);
+    qDebug() << &imageToAdd;
 }
 
 void Model::undo()
 {
+    if (undoBuffer.empty()) {
+        return;
+    }
+
     qDebug() << "UNDO";
-    frames.insert(undoBuffer.back(), 0);
+    //QImage imageToUndo = undoBuffer.back();
+    qDebug() << undoBuffer.back();
+    // frames.insert(undoBuffer.back(), 0);
     emit updateCanvas(undoBuffer.back());
+    //delete undoBuffer.back();
     undoBuffer.pop_back();
 }
 

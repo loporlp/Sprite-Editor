@@ -96,15 +96,15 @@ public:
 
 private:
     Q_OBJECT
-    std::vector<QImage> undoBuffer;
+
     Frames frames;
     CanvasData canvasSettings;
 
 public:
     explicit Model(QObject *parent = nullptr);
-
+    std::vector<QImage> undoBuffer;
     //adds to the undo stack
-    void addUndoStack();
+    void addUndoStack(QImage* image);
 
     void undo();
 
