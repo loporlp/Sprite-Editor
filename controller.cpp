@@ -19,6 +19,7 @@ void Controller::setupConnections()
 {
     setupDrawConnections();
     setupFileManagement();
+    setupFrameManagement();
 }
 
 void Controller::setupDrawConnections()
@@ -59,3 +60,24 @@ void Controller::setupFileManagement()
         view.canvas()->setImage(&currentImage);
     });
 }
+
+void Controller::setupFrameManagement()
+{
+    connect(&view, &MainWindow::addFrame, this, [this]() {
+        model.getFrames().generateFrame(currentImage.width(), currentImage.height());
+        model.getCanvasSettings().setCurrentFrameIndex(model.getFrames().numFrames()-1);
+        currentImage = model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex());
+        view.canvas()->setImage(&currentImage);
+    });
+
+    connect(&view, &MainWindow::deleteFrame, this, [this]() {
+
+        uint currentFrameIndex = model.getCanvasSettings().getCurrentFrameIndex();
+
+        model.getFrames().remove(currentFrameIndex);
+        model.getCanvasSettings().setCurrentFrameIndex(currentFrameIndex-1);
+        currentImage = model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex());
+        view.canvas()->setImage(&currentImage);
+    });
+}
+

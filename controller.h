@@ -17,6 +17,7 @@ public:
     Controller(Model &model, MainWindow &view);
     void setupConnections();
     void setupFileManagement();
+    void setupFrameManagement();
 
 private:
     void setupDrawConnections();
