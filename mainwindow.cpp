@@ -84,6 +84,7 @@ void MainWindow::connectFileActions()
 void MainWindow::colorButtonPressed()
 {
     QColor color = QColorDialog::getColor();
+    qDebug() << color;
     emit setPenColor(color);
 }
 
@@ -212,10 +213,10 @@ void MainWindow::openFileAction()
         tr("Open File"),
         "C://",
         "Sprite Pixel Image (*.ssp);;");
-    emit loadFile(filename);
+    emit loadFile(QString(filename));
 }
 
 void MainWindow::newFileAction()
 {
-    // Implement new file functionality
+
 }
