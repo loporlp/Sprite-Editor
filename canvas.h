@@ -29,6 +29,7 @@ public:
     void setOffset(QPoint);
     void update();
     QImage *imageToDisplay;
+    void keyPressEvent(QKeyEvent *event);
 
 protected:
     void mousePressEvent(QMouseEvent *event);
@@ -36,7 +37,6 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void wheelEvent(QWheelEvent *event);
     bool event(QEvent *event);
-    void keyPressEvent(QKeyEvent *event);
 
 
 private:

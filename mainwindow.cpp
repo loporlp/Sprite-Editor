@@ -10,15 +10,16 @@
 */
 
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include <QDebug>
+#include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
+    grabKeyboard();
     // Set up Animation preview screen
     initializeAnimationPreview();
 
@@ -30,7 +31,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Connect signals and slots for frames
     //connect(ui->frameListWidget, &QListWidget::itemClicked, this, &MainWindow::setFrameToEdit);
-    connect(ui->frameListWidget, &QListWidget::itemClicked, this, [this](QListWidgetItem * item){ emit setFrameToEdit(item->data(0).toInt());});
+    connect(ui->frameListWidget, &QListWidget::itemClicked, this, [this](QListWidgetItem *item) {
+        emit setFrameToEdit(item->data(0).toInt());
+    });
 
     connectFrameButtons();
 
@@ -41,7 +44,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->fpsSlider, &QSlider::valueChanged, this, &MainWindow::fpsSliderChanged);
 
     connect(ui->resizeCanvasAction, &QAction::triggered, this, &MainWindow::sizeCanvasAction);
-    connect(ui->actualSizeCheckBox, &QCheckBox::clicked, this, [this]() { emit startAnimation(true); });
+    connect(ui->actualSizeCheckBox, &QCheckBox::clicked, this, [this]() {
+        emit startAnimation(true);
+    });
 
     // Connect signals and slots for files
     connectFileActions();
@@ -61,17 +66,32 @@ MainWindow::~MainWindow()
 void MainWindow::connectToolButtons()
 {
     connect(ui->penButton, &QPushButton::released, this, [this]() { emit selectActiveTool(Pen); });
-    connect(ui->eraserButton, &QPushButton::released, this, [this]() { emit selectActiveTool(Eraser); });
-    connect(ui->eyedropButton, &QPushButton::released, this, [this]() { emit selectActiveTool(Eyedrop); });
-    connect(ui->bucketButton, &QPushButton::released, this, [this]() { emit selectActiveTool(Bucket); });
+    connect(ui->eraserButton, &QPushButton::released, this, [this]() {
+        emit selectActiveTool(Eraser);
+    });
+    connect(ui->eyedropButton, &QPushButton::released, this, [this]() {
+        emit selectActiveTool(Eyedrop);
+    });
+    connect(ui->bucketButton, &QPushButton::released, this, [this]() {
+        emit selectActiveTool(Bucket);
+    });
 }
 
 void MainWindow::connectFrameButtons()
 {
     connect(ui->addFrameButton, &QPushButton::released, this, &MainWindow::addFrameButtonPressed);
-    connect(ui->deleteFrameButton, &QPushButton::released, this, &MainWindow::deleteFrameButtonPressed);
-    connect(ui->moveFrameUpButton, &QPushButton::released, this, &MainWindow::moveFrameUpButtonPressed);
-    connect(ui->moveFrameDownButton, &QPushButton::released, this, &MainWindow::moveFrameDownButtonPressed);
+    connect(ui->deleteFrameButton,
+            &QPushButton::released,
+            this,
+            &MainWindow::deleteFrameButtonPressed);
+    connect(ui->moveFrameUpButton,
+            &QPushButton::released,
+            this,
+            &MainWindow::moveFrameUpButtonPressed);
+    connect(ui->moveFrameDownButton,
+            &QPushButton::released,
+            this,
+            &MainWindow::moveFrameDownButtonPressed);
 }
 
 void MainWindow::connectFileActions()
@@ -203,26 +223,44 @@ void MainWindow::moveFrameDownButtonPressed()
 //-----File updates-----//
 void MainWindow::saveFileAction()
 {
-    QString fileDirectory = QFileDialog::getSaveFileName(
-        this,
-        tr("Choose Directory"),
-        "C://",
-        "Sprite Pixel Image (*.ssp);;");
+    QString fileDirectory = QFileDialog::getSaveFileName(this,
+                                                         tr("Choose Directory"),
+                                                         "C://",
+                                                         "Sprite Pixel Image (*.ssp);;");
     changed = false;
     emit saveFile(QString(fileDirectory));
 }
 
 void MainWindow::openFileAction()
 {
-    QString filename = QFileDialog::getOpenFileName(
-        this,
-        tr("Open File"),
-        "C://",
-        "Sprite Pixel Image (*.ssp);;");
+    QString filename = QFileDialog::getOpenFileName(this,
+                                                    tr("Open File"),
+                                                    "C://",
+                                                    "Sprite Pixel Image (*.ssp);;");
     emit loadFile(filename);
 }
 
 void MainWindow::newFileAction()
 {
     // Implement new file functionality
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    qDebug() << event;
+    if (event->modifiers().testFlag(Qt::ControlModifier)) {
+        if (event->key() == Qt::Key_Z) {
+            if (event->modifiers().testFlag(Qt::ShiftModifier)) {
+                emit redoAction(); // Ctrl + Shift + Z: Redo
+            } else {
+                emit undoAction(); // Ctrl + Z: Undo
+            }
+        } else if (event->key() == Qt::Key_Y) {
+            emit undoAction(); // Ctrl + Y: Redo
+        }
+    } else {
+        // The keys being pressed aren't relevant here,
+        // but maybe it'll be something the canvas cares about
+        canvas()->keyPressEvent(event);
+    }
 }

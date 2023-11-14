@@ -95,10 +95,7 @@ private:
 
     QList<QListWidgetItem *> frameList;
 
-    //QPixmap canvas;
-
     QImage image;
-
     bool actualSize;
     bool changed;
 
@@ -107,6 +104,9 @@ private:
     void connectToolButtons();
     void connectFrameButtons();
     void connectFileActions();
+
+protected:
+    void keyPressEvent(QKeyEvent *event);
 };
 
 #endif // MAINWINDOW_H
