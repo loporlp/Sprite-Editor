@@ -96,6 +96,7 @@ private:
 
     Frames frames;
     CanvasData canvasSettings;
+    int fps;
 
 public:
     explicit Model(QObject *parent = nullptr);
@@ -106,7 +107,20 @@ public:
     /// returns a reference to our `CanvasSettings` class
     CanvasData &getCanvasSettings();
 
+    /// Animation Methods
+    /// These methods could potentially be moved to conroller class just don't know how we want to setup
+    /// signals and frames quite yet
+
+    /// Loops through the vector of frames and handles how many frames to display per second
+    void playAnimationFrames();
+
 signals:
+    void updateAnimationPreview(QImage frame, int frameTime);
+
+public slots:
+    void updateFPS(int fps);
+    bool play;
+
 };
 
 #endif // MODEL_H

@@ -18,6 +18,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QProcess>
+#include <QTimer>
 
 #include "ui_mainwindow.h"
 #include "canvas.h"
@@ -73,6 +74,7 @@ private slots:
     // Animation related slots
     void playAnimation(const QImage &frameImage);
     void fpsSliderChanged(int value);
+    void receiveAnimationFrameData(QImage frame, int delay);
 
     // Frame related slots
     void updateFrameEditor(const QImage &frameImage, int editingTarget);

@@ -124,6 +124,12 @@ void MainWindow::fpsSliderChanged(int value)
     emit setFPS(value);
 }
 
+void MainWindow::receiveAnimationFrameData(QImage frame, int delay)
+{
+    QTimer::singleShot(delay, this, [this, frame]() {playAnimation(frame);});
+}
+
+
 //-----Frame updates-----//
 void MainWindow::updateFrameEditor(const QImage &frameImage, int editingTarget)
 {

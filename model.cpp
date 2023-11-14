@@ -125,3 +125,22 @@ QVector2D Model::CanvasData::screenSpaceToImageSpace(QVector2D &screenSpace)
     qWarning("screenSpaceToImageSpace() not yet implemented");
     return QVector2D(0.0, 0.0);
 }
+
+void Model::playAnimationFrames()
+{
+    if(play)
+    {
+        // Get how often to change the frame in milliseconds
+        int frameTime = (1 / fps) * 100;
+        int delay = 0;
+
+        for (int i = 0; i < (int)frames.numFrames(); i++)
+        {
+
+            emit updateAnimationPreview(frames.get(i), delay);
+            delay += frameTime;
+        }
+
+    }
+}
+

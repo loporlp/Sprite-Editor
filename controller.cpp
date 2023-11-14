@@ -15,6 +15,7 @@ Controller::Controller(Model &model, MainWindow &view)
 void Controller::setupConnections()
 {
     setupDrawConnections();
+    setupAnimationConnections();
 }
 
 void Controller::setupDrawConnections()
@@ -30,4 +31,36 @@ void Controller::setupDrawConnections()
         currentImage.setPixelColor(pos.x(), pos.y(), qRgb(0, 0, 0));
         canvas->update();
     });
+}
+
+void Controller::setupAnimationConnections()
+{
+    connect(&view, &MainWindow::setFPS, &model, &Model::updateFPS);
+
+    connect(&view, &MainWindow::startAnimation, &model, &Model::play);
+
+    connect(&view, &MainWindow::startAnimation, this, [this] () {
+
+        QTimer *timer = new QTimer(this);
+        connect(timer, &QTimer::timeout, &model, QOverload<>::of(&Model::playAnimationFrames));
+
+        while(model.play)
+        {
+            timer->start(1000);
+        }
+
+    });
+
+
+    connect(&model, &Model::updateAnimationPreview, this, [this](QImage frame, int delay) {
+
+        QTimer::singleShot(delay, this, [this, frame]() {
+
+            view.playAnimation(frame);
+        });
+
+    });
+
+    //    void setFPS(int fps);
+    //      TODO: store the fps value which will determine how many frames we loop through per second
 }

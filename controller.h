@@ -19,6 +19,7 @@ public:
 
 private:
     void setupDrawConnections();
+    void setupAnimationConnections();
 };
 
 #endif // CONTROLLER_H
