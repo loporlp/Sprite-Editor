@@ -115,7 +115,7 @@ public:
     CanvasData &getCanvasSettings();
 
 signals:
-    void updateCanvas(QImage image);
+    void updateCanvas(QImage& image);
 };
 
 #endif // MODEL_H

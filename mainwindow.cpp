@@ -11,6 +11,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -92,9 +93,10 @@ void MainWindow::undoButtonPressed()
     emit undoAction();
 }
 
-void MainWindow::updateCanvas(QImage* image)
+void MainWindow::updateCanvas(QImage image)
 {
-    canvas()->setImage(image);
+    qDebug() << "UPDATE IMAGE";
+    canvas()->setImage(&image);
 }
 
 void MainWindow::redoButtonPressed()
