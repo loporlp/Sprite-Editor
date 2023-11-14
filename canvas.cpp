@@ -18,11 +18,7 @@ Canvas::Canvas(QWidget *parent)
     , imageHolder{new QLabel(this)}
     , canvasSize(QPoint(0, 0))
     , offset(QPoint(0, 0))
-<<<<<<< Updated upstream
-    , scaleFactor(5)
-=======
     , scaleFactor(8)
->>>>>>> Stashed changes
 {
     this->setStyleSheet("QWidget {background-color: rgb(200, 255, 255)}");
 
@@ -110,7 +106,6 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
 /// canvas around. Touchpad scrolling is included in that.
 void Canvas::wheelEvent(QWheelEvent *event)
 {
-<<<<<<< Updated upstream
     this->setOffset(offset + event->pixelDelta());
     this->update();
 }
@@ -216,11 +211,4 @@ bool Canvas::event(QEvent *event)
     }
     }
     return true;
-=======
-    float x = float(canvasSpace.x()) / float(scaleFactor);
-    float y = float(canvasSpace.y()) / float(scaleFactor);
-
-
-    return QPoint(floor(x), floor(y));
->>>>>>> Stashed changes
 }
