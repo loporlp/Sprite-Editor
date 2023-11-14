@@ -126,12 +126,28 @@ QVector2D Model::CanvasData::screenSpaceToImageSpace(QVector2D &screenSpace)
     return QVector2D(0.0, 0.0);
 }
 
+void Model::updateFPS(int otherFps)
+{
+    fps = otherFps;
+}
+
+void Model::updatePlay(bool otherPlay)
+{
+    play = otherPlay;
+}
+
+bool Model::getPlayStatus()
+{
+    return play;
+}
+
+
 void Model::playAnimationFrames()
 {
     if(play)
     {
         // Get how often to change the frame in milliseconds
-        int frameTime = (1 / fps) * 100;
+        int frameTime = calculateDelay();
         int delay = 0;
 
         for (int i = 0; i < (int)frames.numFrames(); i++)
@@ -142,5 +158,23 @@ void Model::playAnimationFrames()
         }
 
     }
+}
+
+void Model::beginAnimation()
+{
+    QTimer *timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, QOverload<>::of(&Model::playAnimationFrames));
+
+    timer->start(calculateDelay() * frames.numFrames());
+
+    while(play)
+    {}
+
+    timer->stop();
+}
+
+double Model::calculateDelay()
+{
+    return (1 / fps) * 100;
 }
 

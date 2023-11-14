@@ -64,6 +64,9 @@ signals:
     // File related signals
     void saveFile(const QString &filePath);
     void loadFile(const QString &filePath);
+public slots:
+    // Animation related Slots
+    void playAnimation(const QImage &frameImage);
 
 private slots:
     // Tool related slots
@@ -72,7 +75,6 @@ private slots:
     void redoButtonPressed();
 
     // Animation related slots
-    void playAnimation(const QImage &frameImage);
     void fpsSliderChanged(int value);
     void receiveAnimationFrameData(QImage frame, int delay);
 

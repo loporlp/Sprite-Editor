@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QVector2D>
 #include <QLabel>
+#include <QTimer>
 
 class Model : public QObject
 {
@@ -96,9 +97,13 @@ private:
 
     Frames frames;
     CanvasData canvasSettings;
+
     int fps;
+    bool play;
 
 public:
+
+
     explicit Model(QObject *parent = nullptr);
 
     /// returns a reference to our container of frames
@@ -114,12 +119,15 @@ public:
     /// Loops through the vector of frames and handles how many frames to display per second
     void playAnimationFrames();
 
+    void beginAnimation();
+
+    bool getPlayStatus();
 signals:
     void updateAnimationPreview(QImage frame, int frameTime);
 
 public slots:
     void updateFPS(int fps);
-    bool play;
+    void updatePlay(bool play);
 
 };
 

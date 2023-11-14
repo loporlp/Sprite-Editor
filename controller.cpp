@@ -37,14 +37,14 @@ void Controller::setupAnimationConnections()
 {
     connect(&view, &MainWindow::setFPS, &model, &Model::updateFPS);
 
-    connect(&view, &MainWindow::startAnimation, &model, &Model::play);
+    connect(&view, &MainWindow::startAnimation, &model, &Model::updatePlay);
 
-    connect(&view, &MainWindow::startAnimation, this, [this] () {
+    connect(&view, &MainWindow::startAnimation, this, [this]() {
 
         QTimer *timer = new QTimer(this);
         connect(timer, &QTimer::timeout, &model, QOverload<>::of(&Model::playAnimationFrames));
 
-        while(model.play)
+        while(model.getPlayStatus())
         {
             timer->start(1000);
         }
