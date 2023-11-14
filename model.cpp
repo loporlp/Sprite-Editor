@@ -1,5 +1,6 @@
 #include "model.h"
 #include <QImage>
+#include <QLabel>
 #include <QObject>
 #include <QPixmap>
 
@@ -24,21 +25,26 @@ Model::Model(QObject *parent)
 
 Model::Frames::Frames(uint width, uint height)
 {
-    QImage defaultFrame = QPixmap(width, height).toImage();
-    defaultFrame.fill(QColor(qRgba(255, 255, 255, 255)));
-    frames.push_back(defaultFrame);
+    generateFrame(width, height);
 }
 
 Model::Frames::Frames()
     : Model::Frames::Frames(64, 64)
 {}
 
+void Model::Frames::generateFrame(int width, int height)
+{
+    QImage defaultFrame(width, height, QImage::Format_RGB32);
+    defaultFrame.fill(QColor(Qt::white));
+    frames.push_back(defaultFrame);
+}
+
 uint Model::Frames::numFrames()
 {
     return frames.size();
 }
 
-QImage Model::Frames::get(uint index)
+QImage& Model::Frames::get(uint index)
 {
     assert(frames.size() > index);
     return frames.at(index);
@@ -81,6 +87,7 @@ Model::CanvasData::CanvasData(QVector2D canvasSize, QVector2D canvasPosition, fl
     : canvasPosition(canvasPosition)
     , canvasSize(canvasSize)
     , canvasZoom(canvasZoom)
+    , indexOfCurrentFrame(0)
 {}
 
 const QVector2D &Model::CanvasData::getPosition()
