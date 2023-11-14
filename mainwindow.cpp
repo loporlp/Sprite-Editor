@@ -89,7 +89,12 @@ void MainWindow::colorButtonPressed()
 
 void MainWindow::undoButtonPressed()
 {
-    // Implement undo functionality
+    emit undoAction();
+}
+
+void MainWindow::updateCanvas(QImage* image)
+{
+    canvas()->setImage(image);
 }
 
 void MainWindow::redoButtonPressed()

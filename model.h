@@ -8,7 +8,10 @@
 
 class Model : public QObject
 {
+
+
 public:
+
     class Frames
     {
         std::vector<QImage> frames;
@@ -93,12 +96,17 @@ public:
 
 private:
     Q_OBJECT
-
+    std::vector<QImage> undoBuffer;
     Frames frames;
     CanvasData canvasSettings;
 
 public:
     explicit Model(QObject *parent = nullptr);
+
+    //adds to the undo stack
+    void addUndoStack();
+
+    void undo();
 
     /// returns a reference to our container of frames
     Frames &getFrames();
@@ -107,6 +115,7 @@ public:
     CanvasData &getCanvasSettings();
 
 signals:
+    void updateCanvas(QImage image);
 };
 
 #endif // MODEL_H

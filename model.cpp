@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QPixmap>
 
+#include <QDebug>
+
 //-----Model-----//
 Model::Frames &Model::getFrames()
 {
@@ -79,6 +81,19 @@ void Model::Frames::remove(uint index)
 void Model::Frames::pop()
 {
     frames.pop_back();
+}
+
+void Model::addUndoStack()
+{
+    undoBuffer.push_back(getFrames().get(getCanvasSettings().getCurrentFrameIndex()));
+}
+
+void Model::undo()
+{
+    qDebug() << "UNDO";
+    frames.insert(undoBuffer.back(), 0);
+    emit updateCanvas(undoBuffer.back());
+    undoBuffer.pop_back();
 }
 
 //-----Model::CanvasData-----//

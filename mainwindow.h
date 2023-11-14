@@ -42,6 +42,8 @@ public:
     enum Tool{ Pen, Eraser, Fill, Eyedrop, Bucket };
     Canvas *canvas();
 
+    void updateCanvas(QImage* image);
+
 signals:
     // Tool related signals
     void selectActiveTool(Tool tool);
