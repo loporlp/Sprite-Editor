@@ -46,6 +46,8 @@ public:
 
         /// deletes the last frame of the animation
         void pop();
+
+        void swap(int firstIndex, int secondIndex);
     };
 
     class CanvasData

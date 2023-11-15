@@ -55,6 +55,7 @@ signals:
     void deleteFrame();
     void moveFrame(int fromIndex, int toIndex);
     void resizeCanvas(int width, int height);
+    void setFrame(int frameIndex);
 
     // Animation related signals
     void startAnimation(bool play);
@@ -82,6 +83,7 @@ private slots:
     void deleteFrameButtonPressed();
     void moveFrameUpButtonPressed();
     void moveFrameDownButtonPressed();
+    void frameSelected();
 
     // File related slots
     void saveFileAction();

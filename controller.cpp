@@ -9,8 +9,8 @@ QByteArray swag;
 Controller::Controller(Model &model, MainWindow &view)
     : model(model)
     , view(view)
-    , currentImage(model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex()))
 {
+    currentImage = model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex());
     view.canvas()->setImage(&currentImage);
     setupConnections();
 }
@@ -64,8 +64,12 @@ void Controller::setupFileManagement()
 void Controller::setupFrameManagement()
 {
     connect(&view, &MainWindow::addFrame, this, [this]() {
+        // save the current frame
+        model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex()) = currentImage;
+
         model.getFrames().generateFrame(currentImage.width(), currentImage.height());
         model.getCanvasSettings().setCurrentFrameIndex(model.getFrames().numFrames()-1);
+        qDebug() << model.getCanvasSettings().getCurrentFrameIndex();
         currentImage = model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex());
         view.canvas()->setImage(&currentImage);
     });
@@ -74,9 +78,35 @@ void Controller::setupFrameManagement()
 
         uint currentFrameIndex = model.getCanvasSettings().getCurrentFrameIndex();
 
+        // save the current frame
+        model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex()) = currentImage;
+
+        qDebug() << currentFrameIndex;
         model.getFrames().remove(currentFrameIndex);
         model.getCanvasSettings().setCurrentFrameIndex(currentFrameIndex-1);
+        qDebug() << model.getCanvasSettings().getCurrentFrameIndex();
         currentImage = model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex());
+        view.canvas()->setImage(&currentImage);
+    });
+
+    connect(&view, &MainWindow::setFrame, this, [this](int frameIndex) {
+        // save the current frame
+        model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex()) = currentImage;
+
+        model.getCanvasSettings().setCurrentFrameIndex(frameIndex);
+        qDebug() << model.getCanvasSettings().getCurrentFrameIndex();
+        currentImage = model.getFrames().get(frameIndex);
+        view.canvas()->setImage(&currentImage);
+    });
+
+    connect(&view, &MainWindow::moveFrame, this, [this](int firstFrame, int secondFrame) {
+        // save the current frame
+        model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex()) = currentImage;
+
+        model.getFrames().swap(firstFrame, secondFrame);
+        model.getCanvasSettings().setCurrentFrameIndex(secondFrame);
+        qDebug() << model.getCanvasSettings().getCurrentFrameIndex();
+        currentImage = model.getFrames().get(secondFrame);
         view.canvas()->setImage(&currentImage);
     });
 }

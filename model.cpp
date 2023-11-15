@@ -3,6 +3,7 @@
 #include <QLabel>
 #include <QObject>
 #include <QPixmap>
+#include <algorithm>
 
 //-----Model-----//
 Model::Frames &Model::getFrames()
@@ -79,6 +80,11 @@ void Model::Frames::remove(uint index)
 void Model::Frames::pop()
 {
     frames.pop_back();
+}
+
+void Model::Frames::swap(int firstIndex, int secondIndex)
+{
+    std::iter_swap(frames.begin() + firstIndex, frames.begin() + secondIndex);
 }
 
 //-----Model::CanvasData-----//

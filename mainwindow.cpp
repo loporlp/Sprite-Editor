@@ -71,6 +71,7 @@ void MainWindow::connectFrameButtons()
     connect(ui->deleteFrameButton, &QPushButton::released, this, &MainWindow::deleteFrameButtonPressed);
     connect(ui->moveFrameUpButton, &QPushButton::released, this, &MainWindow::moveFrameUpButtonPressed);
     connect(ui->moveFrameDownButton, &QPushButton::released, this, &MainWindow::moveFrameDownButtonPressed);
+    connect(ui->frameListWidget, &QListWidget::itemClicked, this, &MainWindow::frameSelected);
 }
 
 void MainWindow::connectFileActions()
@@ -158,7 +159,7 @@ void MainWindow::addFrameButtonPressed()
 
 void MainWindow::deleteFrameButtonPressed()
 {
-    if (frameList.size() == 1) {
+    if (frameList.size() == 1 || ui->frameListWidget->currentItem()->data(0).toInt() == 0) {
         return;
     }
 
@@ -181,7 +182,7 @@ void MainWindow::moveFrameUpButtonPressed()
         return;
     emit moveFrame(id - 1, id);
     ui->frameListWidget->setCurrentRow(id - 1);
-    emit setFrameToEdit(id - 1);
+    emit setFrame(id-1);
 }
 
 void MainWindow::moveFrameDownButtonPressed()
@@ -191,7 +192,13 @@ void MainWindow::moveFrameDownButtonPressed()
         return;
     emit moveFrame(id, id + 1);
     ui->frameListWidget->setCurrentRow(id + 1);
-    emit setFrameToEdit(id + 1);
+    emit setFrame(id+1);
+}
+
+void MainWindow::frameSelected()
+{
+    int id = ui->frameListWidget->currentItem()->data(0).toInt();
+    emit setFrame(id);
 }
 
 //-----File updates-----//

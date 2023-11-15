@@ -9,7 +9,7 @@ class Controller : QObject
 {
     Model &model;
     MainWindow &view;
-    QImage &currentImage;
+    QImage currentImage;
 
     Q_OBJECT
 
