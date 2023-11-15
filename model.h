@@ -47,7 +47,11 @@ public:
         /// deletes the last frame of the animation
         void pop();
 
+        /// swap the vector item at the first parameter index with the item at the second parameter index.
         void swap(int firstIndex, int secondIndex);
+
+        /// clear all the data within the frame class object's frame vector
+        void clearFrames();
     };
 
     class CanvasData
@@ -87,6 +91,9 @@ public:
 
         /// updates the index of which frame we are currently displaying
         void setCurrentFrameIndex(uint newIndex);
+
+        /// resets all the canvas data
+        void clearCanvasData();
 
         /// converts the screen space pixel coordinates provided to the
         /// coordinate space of the sprite the canvas is displaying.

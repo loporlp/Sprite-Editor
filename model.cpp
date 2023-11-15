@@ -87,6 +87,11 @@ void Model::Frames::swap(int firstIndex, int secondIndex)
     std::iter_swap(frames.begin() + firstIndex, frames.begin() + secondIndex);
 }
 
+void Model::Frames::clearFrames()
+{
+    frames.clear();
+}
+
 //-----Model::CanvasData-----//
 
 Model::CanvasData::CanvasData(QVector2D canvasSize, QVector2D canvasPosition, float canvasZoom)
@@ -124,6 +129,11 @@ uint Model::CanvasData::getCurrentFrameIndex()
 void Model::CanvasData::setCurrentFrameIndex(uint newIndex)
 {
     indexOfCurrentFrame = newIndex;
+}
+
+void Model::CanvasData::clearCanvasData()
+{
+    indexOfCurrentFrame = 0;
 }
 
 QVector2D Model::CanvasData::screenSpaceToImageSpace(QVector2D &screenSpace)

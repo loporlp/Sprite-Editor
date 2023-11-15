@@ -159,11 +159,10 @@ void MainWindow::addFrameButtonPressed()
 
 void MainWindow::deleteFrameButtonPressed()
 {
-    if (frameList.size() == 1 || ui->frameListWidget->currentItem()->data(0).toInt() == 0) {
+    int id = ui->frameListWidget->currentItem()->data(0).toInt();
+    if (frameList.size() == 1) {
         return;
     }
-
-    int id = ui->frameListWidget->currentItem()->data(0).toInt();
 
     delete frameList[id];
 
@@ -172,7 +171,15 @@ void MainWindow::deleteFrameButtonPressed()
         frameList[i]->setData(0, i);
     }
     frameList.pop_back();
+
     emit deleteFrame();
+
+    // handle case where we are deleting the first frame in the list.
+    if(id == 0) {
+        ui->frameListWidget->setCurrentRow(0);
+    } else {
+        ui->frameListWidget->setCurrentRow(id-1);
+    }
 }
 
 void MainWindow::moveFrameUpButtonPressed()
