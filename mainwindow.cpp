@@ -121,7 +121,8 @@ void MainWindow::updateCanvas(QImage image)
 
 void MainWindow::redoButtonPressed()
 {
-    // Implement redo functionality
+    qDebug() << "REDO EMITTED";
+    emit redoAction();
 }
 
 //-----Animation updates-----//

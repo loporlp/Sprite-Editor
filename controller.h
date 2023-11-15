@@ -16,7 +16,7 @@ class Controller : QObject
 public:
     Controller(Model &model, MainWindow &view);
     void setupConnections();
-    void undoConnections();
+    void setupUndoConnections();
 
 private:
     void setupDrawConnections();

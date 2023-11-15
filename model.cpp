@@ -21,6 +21,7 @@ Model::Model(QObject *parent)
     : QObject(parent)
     , frames()
     , canvasSettings(QVector2D(frames.first().width(), frames.first().height()))
+    , justUndid(false)
 {}
 
 //-----Model::Frames-----//
@@ -83,12 +84,22 @@ void Model::Frames::pop()
     frames.pop_back();
 }
 
-void Model::addUndoStack(QImage* image)
+void Model::updateFrame(QImage *image)
+{
+    QImage imageToUpdate = image->copy();
+    frames.insert(imageToUpdate, getCanvasSettings().getCurrentFrameIndex());
+}
+
+void Model::addUndoStack(QImage *image)
 {
     QImage imageToAdd = image->copy();
     qDebug() << "ADDED TO BUFFER";
     undoBuffer.push_back(imageToAdd);
     qDebug() << &imageToAdd;
+
+    if (justUndid) {
+        redoBuffer.clear();
+    }
 }
 
 void Model::undo()
@@ -97,13 +108,36 @@ void Model::undo()
         return;
     }
 
-    qDebug() << "UNDO";
-    //QImage imageToUndo = undoBuffer.back();
-    qDebug() << undoBuffer.back();
-    // frames.insert(undoBuffer.back(), 0);
+    justUndid = true;
+
+    redoBuffer.push_back(frames.get(getCanvasSettings().getCurrentFrameIndex()));
+
+    frames.insert(undoBuffer.back(), getCanvasSettings().getCurrentFrameIndex());
+
+
     emit updateCanvas(undoBuffer.back());
-    //delete undoBuffer.back();
+
+
     undoBuffer.pop_back();
+}
+
+void Model::redo()
+{
+    //qDebug() << &undoBuffer.back();
+    if (redoBuffer.empty()) {
+        qDebug() << "REDO IS EMPTY";
+        return;
+    }
+
+    justUndid = false;
+
+    undoBuffer.push_back(frames.get(getCanvasSettings().getCurrentFrameIndex()));
+
+    frames.insert(redoBuffer.back(), getCanvasSettings().getCurrentFrameIndex());
+
+    emit updateCanvas(redoBuffer.back());
+
+    redoBuffer.pop_back();
 }
 
 //-----Model::CanvasData-----//

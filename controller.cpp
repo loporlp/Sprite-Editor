@@ -14,19 +14,26 @@ Controller::Controller(Model &model, MainWindow &view)
 
 void Controller::setupConnections()
 {
-    undoConnections();
+    setupUndoConnections();
     setupDrawConnections();
 
 }
 
-void Controller::undoConnections()
+void Controller::setupUndoConnections()
 {
     Canvas *canvas = view.canvas();
     // MainWindow *view = view;
     connect(canvas, &Canvas::canvasMousePressed, this, [this]() {
         model.addUndoStack(&currentImage);
     });
+
+    connect(canvas, &Canvas::canvasMouseReleased, this, [this]() {
+        model.updateFrame(&currentImage);
+    });
+
     connect(&view, &MainWindow::undoAction, this, [this]() { model.undo(); });
+    connect(&view, &MainWindow::redoAction, this, [this]() { model.redo(); });
+
     connect(&model, &Model::updateCanvas, this, [this](QImage image) {
         currentImage = image;
         view.canvas()->setImage(&currentImage);

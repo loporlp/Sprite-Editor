@@ -99,14 +99,21 @@ private:
 
     Frames frames;
     CanvasData canvasSettings;
+    bool justUndid;
 
 public:
     explicit Model(QObject *parent = nullptr);
     std::vector<QImage> undoBuffer;
+    std::vector<QImage> redoBuffer;
+
     //adds to the undo stack
-    void addUndoStack(QImage* image);
+    void addUndoStack(QImage *image);
 
     void undo();
+
+    void redo();
+
+    void updateFrame(QImage *image);
 
     /// returns a reference to our container of frames
     Frames &getFrames();
