@@ -131,6 +131,14 @@ void MainWindow::brushSizeChanged()
    emit selectBrushSettings(ui->brushSizeBox->currentIndex(), currentColor);
 }
 
+void MainWindow::recieveNewColor(QColor color){
+   currentColor = color;
+
+   const QString setColor("QPushButton { background-color : %1; }");
+   ui->selectedColorButton->setStyleSheet(setColor.arg(color.name()));
+   ui->selectedColorButton->update();
+}
+
 void MainWindow::highlightSelectedTool(QPushButton* button)
 {
     // Reset the style for all tool buttons

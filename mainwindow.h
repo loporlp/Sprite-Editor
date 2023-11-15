@@ -92,6 +92,9 @@ private slots:
     void saveFileAction();
     void openFileAction();
     void newFileAction();
+
+public slots:
+    void recieveNewColor(QColor color);
     
 private:
     Ui::MainWindow *ui;

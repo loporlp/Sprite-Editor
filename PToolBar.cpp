@@ -61,8 +61,9 @@ void PToolBar::SetCurrentBrushSettings(int size, QColor color){
 }
 
 void PToolBar::SetPenBrushColor(QColor color){
-    currentTool->SetBrushSettings(tool.brushSize, color);
-    //pen.brushColor = color;
-    //bucket.brushColor = color;
-    //tool.brushColor = color;
+//    currentTool->SetBrushSettings(tool.brushSize, color);
+    pen.brushColor = color;
+    bucket.brushColor = color;
+    tool.brushColor = color;
+    emit ColorChanged(color);
 }

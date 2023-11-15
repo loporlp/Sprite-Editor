@@ -128,7 +128,7 @@ public slots:
     void recieveBrushSettings(int size, QColor color);
 
 signals:
-    void updateCanvas();
+    void sendColor(QColor color);
 
 };
 

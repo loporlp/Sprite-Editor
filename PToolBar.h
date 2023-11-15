@@ -48,6 +48,7 @@ public slots:
 signals:
     void ToolChanged();
     void CanvasChanged();
+    void ColorChanged(QColor color);
 };
 
 #endif // PTOOLBAR_H

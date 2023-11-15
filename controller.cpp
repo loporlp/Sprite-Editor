@@ -32,6 +32,8 @@ void Controller::setupDrawConnections()
 
     connect(&view, &MainWindow::selectBrushSettings, &model, &Model::recieveBrushSettings);
 
+    connect(&model, &Model::sendColor, &view, &MainWindow::recieveNewColor);
+
     connect(canvas, &Canvas::canvasMousePressed, this, [this, canvas](QPoint pos) {
         emit drawOnEvent(currentImage, pos);
         canvas->update();
