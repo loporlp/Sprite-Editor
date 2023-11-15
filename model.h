@@ -10,7 +10,10 @@
 
 class Model : public QObject
 {
+
+
 public:
+
     class Frames
     {
         std::vector<QImage> frames;
@@ -111,9 +114,21 @@ private:
     Frames frames;
     CanvasData canvasSettings;
     PToolBar toolBar;
+    bool justUndid;
 
 public:
     explicit Model(QObject *parent = nullptr);
+    std::vector<QImage> undoBuffer;
+    std::vector<QImage> redoBuffer;
+
+    //adds to the undo stack
+    void addUndoStack(QImage *image);
+
+    void undo();
+
+    void redo();
+
+    void updateFrame(QImage *image);
 
     /// returns a reference to our container of frames
     Frames &getFrames();
@@ -130,6 +145,7 @@ public slots:
 signals:
     void sendColor(QColor color);
 
+    void updateCanvas(QImage& image);
 };
 
 #endif // MODEL_H

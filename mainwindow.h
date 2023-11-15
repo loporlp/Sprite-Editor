@@ -43,6 +43,8 @@ public:
     //enum Tool{ Pen, Eraser, Fill, Eyedrop, Bucket };
     Canvas *canvas();
 
+    void updateCanvas(QImage image);
+
 signals:
     // Tool related signals
     void selectActiveTool(Tool tool);
@@ -101,10 +103,7 @@ private:
 
     QList<QListWidgetItem *> frameList;
 
-    //QPixmap canvas;
-
     QImage image;
-
     bool actualSize;
     bool changed;
 
@@ -123,6 +122,8 @@ protected:
 
     /// helper method to draw when a mouse occurs.
     void drawOnEvent(QMouseEvent *event);
+
+    void keyPressEvent(QKeyEvent *event);
 };
 
 #endif // MAINWINDOW_H

@@ -20,10 +20,8 @@ Canvas::Canvas(QWidget *parent)
     , offset(QPoint(0, 0))
     , scaleFactor(8)
 {
-    this->setStyleSheet("QWidget {background-color: rgb(200, 255, 255)}");
 
     grabGesture(Qt::PinchGesture);
-    this->grabKeyboard();
 }
 
 /// Updates which image is being displayed on the canvas. Immediately refreshes by
@@ -145,6 +143,10 @@ void Canvas::pinchEvent(QPinchGesture *event)
 /// Processes key-down inputs to allow the user to move the canvas around with
 /// arrow keys. When shift is held down, the number of pixels moved per input changes
 /// to `KEYBOARD_MOVE_PIXEL_STEP_SHIFT`
+///
+/// Since only one widget can listen to keyboard inputs at a time, and the MainWindow
+/// needs to listen for Undo/Redo actions, the event is caught in `MainWindow::keyPressEvent`
+/// and piped here.
 void Canvas::keyPressEvent(QKeyEvent *event)
 {
     QPoint moveDirection = QPoint(0, 0);
@@ -198,11 +200,6 @@ bool Canvas::event(QEvent *event)
 
     case QEvent::Wheel: {
         wheelEvent(static_cast<QWheelEvent *>(event));
-        break;
-    }
-
-    case QEvent::KeyPress: {
-        keyPressEvent(static_cast<QKeyEvent *>(event));
         break;
     }
 
