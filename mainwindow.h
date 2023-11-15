@@ -18,6 +18,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QProcess>
+#include <QTimer>
 
 #include "ui_mainwindow.h"
 #include "canvas.h"
@@ -68,6 +69,9 @@ signals:
     // File related signals
     void saveFile(const QString &filePath);
     void loadFile(const QString &filePath);
+public slots:
+    // Animation related Slots
+    void playAnimation(const QImage &frameImage);
 
 private slots:
     // Tool related slots
@@ -77,8 +81,8 @@ private slots:
     void brushSizeChanged();
 
     // Animation related slots
-    void playAnimation(const QImage &frameImage);
     void fpsSliderChanged(int value);
+    void receiveAnimationFrameData(QImage frame, int delay);
 
     // Frame related slots
     void updateFrameEditor(const QImage &frameImage, int editingTarget);
