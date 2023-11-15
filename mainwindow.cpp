@@ -336,7 +336,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
                 emit undoAction(); // Ctrl + Z: Undo
             }
         } else if (event->key() == Qt::Key_Y) {
-            emit undoAction(); // Ctrl + Y: Redo
+            emit redoAction(); // Ctrl + Y: Redo
         }
     } else {
         // The keys being pressed aren't relevant here,
