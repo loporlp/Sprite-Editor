@@ -20,7 +20,9 @@ Model::Model(QObject *parent)
     : QObject(parent)
     , frames()
     , canvasSettings(QVector2D(frames.first().width(), frames.first().height()))
-{}
+{
+    connect(&toolBar, &PToolBar::CanvasChanged, this, &Model::updateCanvas);
+}
 
 //-----Model::Frames-----//
 
@@ -92,6 +94,11 @@ void Model::Frames::clearFrames()
     frames.clear();
 }
 
+void Model::Frames::setFramePixel(QImage &frame, int x, int y, uint color)
+{
+    frame.setPixel(x, y, color);
+}
+
 //-----Model::CanvasData-----//
 
 Model::CanvasData::CanvasData(QVector2D canvasSize, QVector2D canvasPosition, float canvasZoom)
@@ -140,4 +147,54 @@ QVector2D Model::CanvasData::screenSpaceToImageSpace(QVector2D &screenSpace)
 {
     qWarning("screenSpaceToImageSpace() not yet implemented");
     return QVector2D(0.0, 0.0);
+}
+
+// !!!!!!!!!!!!!!!!!!! MY METHODS !!!!!!!!!!!!!!!!!!!
+
+void Model::recieveDrawOnEvent(QImage &image, QPoint pos) {
+
+    int brushSize = toolBar.CurrentTool()->brushSize;
+
+    if (brushSize == 0) {
+        toolBar.DrawWithCurrentTool(image, pos);
+    } else {
+        // Calculate and iterate of neighboring points based on the brush size
+        for (int dx = -brushSize; dx <= brushSize; ++dx) {
+            for (int dy = -brushSize; dy <= brushSize; ++dy) {
+                QPoint currentPos = pos + QPoint(dx, dy);
+
+                // Check if the current position is within the image boundaries
+                if (image.rect().contains(currentPos)) {
+                    toolBar.DrawWithCurrentTool(image, currentPos);
+                }
+            }
+        }
+    }
+}
+
+void Model::recievePenColor(QColor color){
+    toolBar.SetCurrentBrushSettings(toolBar.CurrentTool()->brushSize, color);
+}
+
+void Model::recieveActiveTool(Tool tool){
+    if(tool == Tool::Pen){
+        toolBar.UpdateCurrentTool(Tool::Pen);
+    }
+    else if(tool == Tool::Eraser){
+        toolBar.UpdateCurrentTool(Tool::Eraser);
+    }
+    else if(tool == Tool::Eyedrop){
+        toolBar.UpdateCurrentTool(Tool::Eyedrop);
+    }
+    else if(tool == Tool::Bucket){
+        toolBar.UpdateCurrentTool(Tool::Bucket);
+    }
+}
+
+
+void Model::recieveBrushSettings(int size, QColor color)
+{
+    toolBar.SetCurrentBrushSettings(size, color);
+
+    //toolBar.SetCurrentBrushSettings(size, toolBar.CurrentTool()->brushColor);
 }

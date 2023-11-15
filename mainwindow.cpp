@@ -12,6 +12,18 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <QPushButton>
+#include <QImage>
+#include <QLayout>
+#include <QObject>
+#include <QLabel>
+#include <QColor>
+#include <QApplication>
+#include <QTimer>
+#include <QMouseEvent>
+#include <QPainter>
+#include <iostream>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -23,9 +35,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Connect signals and slots for tools
     connectToolButtons();
+
     connect(ui->colorButton, &QPushButton::released, this, &MainWindow::colorButtonPressed);
+    //connect(ui->eyedropButton, &QPushButton::released, this, &MainWindow::eyedropButtonPressed);
     connect(ui->undoButton, &QPushButton::released, this, &MainWindow::undoButtonPressed);
     connect(ui->redoButton, &QPushButton::released, this, &MainWindow::redoButtonPressed);
+    connect(ui->brushSizeBox, &QComboBox::currentIndexChanged, this, &MainWindow::brushSizeChanged);
 
     // Connect signals and slots for frames
     //connect(ui->frameListWidget, &QListWidget::itemClicked, this, &MainWindow::setFrameToEdit);
@@ -57,12 +72,28 @@ MainWindow::~MainWindow()
 }
 
 //Connecting signals and slots
+
 void MainWindow::connectToolButtons()
 {
-    connect(ui->penButton, &QPushButton::released, this, [this]() { emit selectActiveTool(Pen); });
-    connect(ui->eraserButton, &QPushButton::released, this, [this]() { emit selectActiveTool(Eraser); });
-    connect(ui->eyedropButton, &QPushButton::released, this, [this]() { emit selectActiveTool(Eyedrop); });
-    connect(ui->bucketButton, &QPushButton::released, this, [this]() { emit selectActiveTool(Bucket); });
+    connect(ui->penButton, &QPushButton::released, this, [this]() {
+        emit selectActiveTool(Tool::Pen);
+        highlightSelectedTool(ui->penButton);
+    });
+
+    connect(ui->eraserButton, &QPushButton::released, this, [this]() {
+        emit selectActiveTool(Tool::Eraser);
+        highlightSelectedTool(ui->eraserButton);
+    });
+
+    connect(ui->eyedropButton, &QPushButton::released, this, [this]() {
+        emit selectActiveTool(Tool::Eyedrop);
+        highlightSelectedTool(ui->eyedropButton);
+    });
+
+    connect(ui->bucketButton, &QPushButton::released, this, [this]() {
+        emit selectActiveTool(Tool::Bucket);
+        highlightSelectedTool(ui->bucketButton);
+    });
 }
 
 void MainWindow::connectFrameButtons()
@@ -81,12 +112,37 @@ void MainWindow::connectFileActions()
     connect(ui->openFileAction, &QAction::triggered, this, &MainWindow::openFileAction);
 }
 
+
 //-----Tool updates-----//
 void MainWindow::colorButtonPressed()
 {
     QColor color = QColorDialog::getColor();
-    qDebug() << color;
     emit setPenColor(color);
+
+    currentColor = color;
+
+    const QString setColor("QPushButton { background-color : %1; }");
+    ui->selectedColorButton->setStyleSheet(setColor.arg(color.name()));
+    ui->selectedColorButton->update();
+}
+
+void MainWindow::brushSizeChanged()
+{
+   emit selectBrushSettings(ui->brushSizeBox->currentIndex(), currentColor);
+}
+
+void MainWindow::highlightSelectedTool(QPushButton* button)
+{
+    // Reset the style for all tool buttons
+    ui->penButton->setStyleSheet("");
+    ui->eraserButton->setStyleSheet("");
+    ui->eyedropButton->setStyleSheet("");
+    ui->bucketButton->setStyleSheet("");
+
+    // Highlight the clicked tool button
+    button->setStyleSheet("background-color: #d9d9d8");
+
+    brushSizeChanged();
 }
 
 void MainWindow::undoButtonPressed()

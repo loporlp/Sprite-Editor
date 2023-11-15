@@ -24,15 +24,21 @@ void Controller::setupDrawConnections()
 {
     Canvas *canvas = view.canvas();
 
-    connect(canvas, &Canvas::canvasMousePressed, this, [this, canvas](QPoint pos)
-    {
-        currentImage.setPixelColor(pos.x(), pos.y(), qRgb(0, 0, 0));
+    connect(this, &Controller::drawOnEvent, &model, &Model::recieveDrawOnEvent);
+
+    connect(&view, &MainWindow::setPenColor, &model, &Model::recievePenColor);
+
+    connect(&view, &MainWindow::selectActiveTool, &model, &Model::recieveActiveTool);
+
+    connect(&view, &MainWindow::selectBrushSettings, &model, &Model::recieveBrushSettings);
+
+    connect(canvas, &Canvas::canvasMousePressed, this, [this, canvas](QPoint pos) {
+        emit drawOnEvent(currentImage, pos);
         canvas->update();
     });
 
-    connect(canvas, &Canvas::canvasMouseMoved, this, [this, canvas](QPoint pos)
-    {
-        currentImage.setPixelColor(pos.x(), pos.y(), qRgb(0, 0, 0));
+    connect(canvas, &Canvas::canvasMouseMoved, this, [this, canvas](QPoint pos) {
+        emit drawOnEvent(currentImage, pos);
         canvas->update();
     });
 }
@@ -40,29 +46,29 @@ void Controller::setupDrawConnections()
 void Controller::setupFileManagement()
 {
     connect(&view, &MainWindow::saveFile, this, [this](QString fileDirectory)
-    {
-        // save the current frame before saving conventions
-        model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex()) = currentImage;
+            {
+                // save the current frame before saving conventions
+                model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex()) = currentImage;
 
-        QVector<QByteArray> imageDataArray;
-        QByteArray ba;
-        for(uint i = 0; i < model.getFrames().numFrames(); i++) {
-            QBuffer buffer(&ba);
-            buffer.open(QIODevice::WriteOnly);
-            model.getFrames().get(i).save(&buffer, "PNG");
-            imageDataArray.push_back(ba);
-            ba.clear();
-        }
-    });
+                QVector<QByteArray> imageDataArray;
+                QByteArray ba;
+                for(uint i = 0; i < model.getFrames().numFrames(); i++) {
+                    QBuffer buffer(&ba);
+                    buffer.open(QIODevice::WriteOnly);
+                    model.getFrames().get(i).save(&buffer, "PNG");
+                    imageDataArray.push_back(ba);
+                    ba.clear();
+                }
+            });
 
     connect(&view, &MainWindow::loadFile, this, [this](QString fileDirectory)
-    {
-// TODO: Implementation from a file.
-//        QVector<QByteArray> imageDataArray;
-//        bool testt = currentImage.loadFromData(imageDataArray.at(0), "PNG");
-//        qDebug() << testt;
-        view.canvas()->setImage(&currentImage);
-    });
+            {
+                // TODO: Implementation from a file.
+                //        QVector<QByteArray> imageDataArray;
+                //        bool testt = currentImage.loadFromData(imageDataArray.at(0), "PNG");
+                //        qDebug() << testt;
+                view.canvas()->setImage(&currentImage);
+            });
 }
 
 void Controller::setupFrameManagement()

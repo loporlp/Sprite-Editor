@@ -21,6 +21,7 @@
 
 #include "ui_mainwindow.h"
 #include "canvas.h"
+#include "PEnums.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -39,12 +40,13 @@ public:
     ~MainWindow();
 
     // Tool enums
-    enum Tool{ Pen, Eraser, Fill, Eyedrop, Bucket };
+    //enum Tool{ Pen, Eraser, Fill, Eyedrop, Bucket };
     Canvas *canvas();
 
 signals:
     // Tool related signals
     void selectActiveTool(Tool tool);
+    void selectBrushSettings(int size, QColor &color);
     void setPenColor(const QColor &color);
     void undoAction();
     void redoAction();
@@ -70,6 +72,7 @@ private slots:
     void colorButtonPressed();
     void undoButtonPressed();
     void redoButtonPressed();
+    void brushSizeChanged();
 
     // Animation related slots
     void playAnimation(const QImage &frameImage);
@@ -105,8 +108,18 @@ private:
     void initializeAnimationPreview();
 
     void connectToolButtons();
+    void highlightSelectedTool(QPushButton* button);
     void connectFrameButtons();
     void connectFileActions();
+
+    QColor currentColor = (QColor(Qt::black));
+
+protected:
+    //    virtual void mousePressEvent(QMouseEvent *event);
+    //    virtual void mouseMoveEvent(QMouseEvent *event);
+
+    /// helper method to draw when a mouse occurs.
+    void drawOnEvent(QMouseEvent *event);
 };
 
 #endif // MAINWINDOW_H

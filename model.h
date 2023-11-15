@@ -5,6 +5,8 @@
 #include <QObject>
 #include <QVector2D>
 #include <QLabel>
+#include "PToolBar.h"
+#include "PEnums.h"
 
 class Model : public QObject
 {
@@ -34,6 +36,9 @@ public:
 
         /// Generates a blank white frame of size width x height
         void generateFrame(int width, int height);
+
+        /// temporary drawing function type beat
+        void setFramePixel(QImage &frame, int x, int y, uint color);
 
         /// adds an image as the last frame of our animation.
         void push(QImage frame);
@@ -105,6 +110,7 @@ private:
 
     Frames frames;
     CanvasData canvasSettings;
+    PToolBar toolBar;
 
 public:
     explicit Model(QObject *parent = nullptr);
@@ -115,7 +121,15 @@ public:
     /// returns a reference to our `CanvasSettings` class
     CanvasData &getCanvasSettings();
 
+public slots:
+    void recieveDrawOnEvent(QImage &image, QPoint pos);
+    void recievePenColor(QColor color);
+    void recieveActiveTool(Tool tool);
+    void recieveBrushSettings(int size, QColor color);
+
 signals:
+    void updateCanvas();
+
 };
 
 #endif // MODEL_H
