@@ -39,19 +39,6 @@ void Controller::setupAnimationConnections()
 
     connect(&view, &MainWindow::startAnimation, &model, &Model::updatePlay);
 
-    connect(&view, &MainWindow::startAnimation, this, [this]() {
-
-        QTimer *timer = new QTimer(this);
-        connect(timer, &QTimer::timeout, &model, QOverload<>::of(&Model::playAnimationFrames));
-
-        while(model.getPlayStatus())
-        {
-            timer->start(1000);
-        }
-
-    });
-
-
     connect(&model, &Model::updateAnimationPreview, this, [this](QImage frame, int delay) {
 
         QTimer::singleShot(delay, this, [this, frame]() {
