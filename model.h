@@ -113,15 +113,14 @@ public:
     CanvasData &getCanvasSettings();
 
     /// Animation Methods
-    /// These methods could potentially be moved to conroller class just don't know how we want to setup
-    /// signals and frames quite yet
-
-    /// Loops through the vector of frames and handles how many frames to display per second
     void playAnimationFrames();
 
     void beginAnimation();
 
     bool getPlayStatus();
+
+    double calculateDelay();
+
 signals:
     void updateAnimationPreview(QImage frame, int frameTime);
 
