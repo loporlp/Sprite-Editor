@@ -5,7 +5,7 @@
 #include "mainwindow.h"
 #include "model.h"
 
-class Controller : QObject
+class Controller : public QObject
 {
     Model &model;
     MainWindow &view;
@@ -16,10 +16,16 @@ class Controller : QObject
 public:
     Controller(Model &model, MainWindow &view);
     void setupConnections();
+    void setupFileManagement();
+    void setupFrameManagement();
     void setupUndoConnections();
 
 private:
     void setupDrawConnections();
+
+    //new from toolGlue
+signals:
+    void drawOnEvent(QImage &image, QPoint pos);
 };
 
 #endif // CONTROLLER_H

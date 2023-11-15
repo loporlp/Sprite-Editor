@@ -13,6 +13,18 @@
 #include <QDebug>
 #include "ui_mainwindow.h"
 
+#include <QPushButton>
+#include <QImage>
+#include <QLayout>
+#include <QObject>
+#include <QLabel>
+#include <QColor>
+#include <QApplication>
+#include <QTimer>
+#include <QMouseEvent>
+#include <QPainter>
+#include <iostream>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -25,9 +37,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Connect signals and slots for tools
     connectToolButtons();
+
     connect(ui->colorButton, &QPushButton::released, this, &MainWindow::colorButtonPressed);
+    //connect(ui->eyedropButton, &QPushButton::released, this, &MainWindow::eyedropButtonPressed);
     connect(ui->undoButton, &QPushButton::released, this, &MainWindow::undoButtonPressed);
     connect(ui->redoButton, &QPushButton::released, this, &MainWindow::redoButtonPressed);
+    connect(ui->brushSizeBox, &QComboBox::currentIndexChanged, this, &MainWindow::brushSizeChanged);
 
     // Connect signals and slots for frames
     //connect(ui->frameListWidget, &QListWidget::itemClicked, this, &MainWindow::setFrameToEdit);
@@ -63,17 +78,33 @@ MainWindow::~MainWindow()
 }
 
 //Connecting signals and slots
+
 void MainWindow::connectToolButtons()
 {
-    connect(ui->penButton, &QPushButton::released, this, [this]() { emit selectActiveTool(Pen); });
+    connect(ui->penButton, &QPushButton::released, this, [this]() {
+        emit selectActiveTool(Tool::Pen);
+        highlightSelectedTool(ui->penButton);
+    });
+
     connect(ui->eraserButton, &QPushButton::released, this, [this]() {
-        emit selectActiveTool(Eraser);
+       
+        emit selectActiveTool(Tool::Eraser);
+        highlightSelectedTool(ui->eraserButton);
+   
     });
+
     connect(ui->eyedropButton, &QPushButton::released, this, [this]() {
-        emit selectActiveTool(Eyedrop);
+       
+        emit selectActiveTool(Tool::Eyedrop);
+        highlightSelectedTool(ui->eyedropButton);
+   
     });
+
     connect(ui->bucketButton, &QPushButton::released, this, [this]() {
-        emit selectActiveTool(Bucket);
+       
+        emit selectActiveTool(Tool::Bucket);
+        highlightSelectedTool(ui->bucketButton);
+   
     });
 }
 
@@ -92,6 +123,7 @@ void MainWindow::connectFrameButtons()
             &QPushButton::released,
             this,
             &MainWindow::moveFrameDownButtonPressed);
+    connect(ui->frameListWidget, &QListWidget::itemClicked, this, &MainWindow::frameSelected);
 }
 
 void MainWindow::connectFileActions()
@@ -101,11 +133,45 @@ void MainWindow::connectFileActions()
     connect(ui->openFileAction, &QAction::triggered, this, &MainWindow::openFileAction);
 }
 
+
 //-----Tool updates-----//
 void MainWindow::colorButtonPressed()
 {
     QColor color = QColorDialog::getColor();
     emit setPenColor(color);
+
+    currentColor = color;
+
+    const QString setColor("QPushButton { background-color : %1; }");
+    ui->selectedColorButton->setStyleSheet(setColor.arg(color.name()));
+    ui->selectedColorButton->update();
+}
+
+void MainWindow::brushSizeChanged()
+{
+   emit selectBrushSettings(ui->brushSizeBox->currentIndex(), currentColor);
+}
+
+void MainWindow::recieveNewColor(QColor color){
+   currentColor = color;
+
+   const QString setColor("QPushButton { background-color : %1; }");
+   ui->selectedColorButton->setStyleSheet(setColor.arg(color.name()));
+   ui->selectedColorButton->update();
+}
+
+void MainWindow::highlightSelectedTool(QPushButton* button)
+{
+    // Reset the style for all tool buttons
+    ui->penButton->setStyleSheet("");
+    ui->eraserButton->setStyleSheet("");
+    ui->eyedropButton->setStyleSheet("");
+    ui->bucketButton->setStyleSheet("");
+
+    // Highlight the clicked tool button
+    button->setStyleSheet("background-color: #d9d9d8");
+
+    brushSizeChanged();
 }
 
 void MainWindow::undoButtonPressed()
@@ -185,11 +251,10 @@ void MainWindow::addFrameButtonPressed()
 
 void MainWindow::deleteFrameButtonPressed()
 {
+    int id = ui->frameListWidget->currentItem()->data(0).toInt();
     if (frameList.size() == 1) {
         return;
     }
-
-    int id = ui->frameListWidget->currentItem()->data(0).toInt();
 
     delete frameList[id];
 
@@ -198,7 +263,15 @@ void MainWindow::deleteFrameButtonPressed()
         frameList[i]->setData(0, i);
     }
     frameList.pop_back();
+
     emit deleteFrame();
+
+    // handle case where we are deleting the first frame in the list.
+    if(id == 0) {
+        ui->frameListWidget->setCurrentRow(0);
+    } else {
+        ui->frameListWidget->setCurrentRow(id-1);
+    }
 }
 
 void MainWindow::moveFrameUpButtonPressed()
@@ -208,7 +281,7 @@ void MainWindow::moveFrameUpButtonPressed()
         return;
     emit moveFrame(id - 1, id);
     ui->frameListWidget->setCurrentRow(id - 1);
-    emit setFrameToEdit(id - 1);
+    emit setFrame(id-1);
 }
 
 void MainWindow::moveFrameDownButtonPressed()
@@ -218,7 +291,13 @@ void MainWindow::moveFrameDownButtonPressed()
         return;
     emit moveFrame(id, id + 1);
     ui->frameListWidget->setCurrentRow(id + 1);
-    emit setFrameToEdit(id + 1);
+    emit setFrame(id+1);
+}
+
+void MainWindow::frameSelected()
+{
+    int id = ui->frameListWidget->currentItem()->data(0).toInt();
+    emit setFrame(id);
 }
 
 //-----File updates-----//
@@ -238,12 +317,12 @@ void MainWindow::openFileAction()
                                                     tr("Open File"),
                                                     "C://",
                                                     "Sprite Pixel Image (*.ssp);;");
-    emit loadFile(filename);
+    emit loadFile(QString(filename));
 }
 
 void MainWindow::newFileAction()
 {
-    // Implement new file functionality
+
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)

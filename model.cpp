@@ -3,6 +3,7 @@
 #include <QLabel>
 #include <QObject>
 #include <QPixmap>
+#include <algorithm>
 
 #include <QDebug>
 
@@ -22,7 +23,9 @@ Model::Model(QObject *parent)
     , frames()
     , canvasSettings(QVector2D(frames.first().width(), frames.first().height()))
     , justUndid(false)
-{}
+{
+    connect(&toolBar, &PToolBar::ColorChanged, this, &Model::recievePenColor);
+}
 
 //-----Model::Frames-----//
 
@@ -82,6 +85,21 @@ void Model::Frames::remove(uint index)
 void Model::Frames::pop()
 {
     frames.pop_back();
+}
+
+void Model::Frames::swap(int firstIndex, int secondIndex)
+{
+    std::iter_swap(frames.begin() + firstIndex, frames.begin() + secondIndex);
+}
+
+void Model::Frames::clearFrames()
+{
+    frames.clear();
+}
+
+void Model::Frames::setFramePixel(QImage &frame, int x, int y, uint color)
+{
+    frame.setPixel(x, y, color);
 }
 
 void Model::updateFrame(QImage *image)
@@ -179,8 +197,63 @@ void Model::CanvasData::setCurrentFrameIndex(uint newIndex)
     indexOfCurrentFrame = newIndex;
 }
 
+void Model::CanvasData::clearCanvasData()
+{
+    indexOfCurrentFrame = 0;
+}
+
 QVector2D Model::CanvasData::screenSpaceToImageSpace(QVector2D &screenSpace)
 {
     qWarning("screenSpaceToImageSpace() not yet implemented");
     return QVector2D(0.0, 0.0);
+}
+
+
+void Model::recieveDrawOnEvent(QImage &image, QPoint pos) {
+
+    int brushSize = toolBar.CurrentTool()->brushSize;
+
+    if (brushSize == 0) {
+        toolBar.DrawWithCurrentTool(image, pos);
+    } else {
+        // Calculate and iterate of neighboring points based on the brush size
+        for (int dx = -brushSize; dx <= brushSize; ++dx) {
+            for (int dy = -brushSize; dy <= brushSize; ++dy) {
+                QPoint currentPos = pos + QPoint(dx, dy);
+
+                // Check if the current position is within the image boundaries
+                if (image.rect().contains(currentPos)) {
+                    toolBar.DrawWithCurrentTool(image, currentPos);
+                }
+            }
+        }
+    }
+}
+
+void Model::recievePenColor(QColor color){
+    toolBar.SetCurrentBrushSettings(toolBar.CurrentTool()->brushSize, color);
+    emit sendColor(color);
+}
+
+void Model::recieveActiveTool(Tool tool){
+    if(tool == Tool::Pen){
+        toolBar.UpdateCurrentTool(Tool::Pen);
+    }
+    else if(tool == Tool::Eraser){
+        toolBar.UpdateCurrentTool(Tool::Eraser);
+    }
+    else if(tool == Tool::Eyedrop){
+        toolBar.UpdateCurrentTool(Tool::Eyedrop);
+    }
+    else if(tool == Tool::Bucket){
+        toolBar.UpdateCurrentTool(Tool::Bucket);
+    }
+}
+
+
+void Model::recieveBrushSettings(int size, QColor color)
+{
+//    toolBar.SetCurrentBrushSettings(size, color);
+
+    toolBar.SetCurrentBrushSettings(size, toolBar.CurrentTool()->brushColor);
 }

@@ -18,7 +18,7 @@ Canvas::Canvas(QWidget *parent)
     , imageHolder{new QLabel(this)}
     , canvasSize(QPoint(0, 0))
     , offset(QPoint(0, 0))
-    , scaleFactor(5)
+    , scaleFactor(8)
 {
 
     grabGesture(Qt::PinchGesture);

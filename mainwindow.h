@@ -21,6 +21,7 @@
 
 #include "ui_mainwindow.h"
 #include "canvas.h"
+#include "PEnums.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -39,7 +40,7 @@ public:
     ~MainWindow();
 
     // Tool enums
-    enum Tool{ Pen, Eraser, Fill, Eyedrop, Bucket };
+    //enum Tool{ Pen, Eraser, Fill, Eyedrop, Bucket };
     Canvas *canvas();
 
     void updateCanvas(QImage image);
@@ -47,6 +48,7 @@ public:
 signals:
     // Tool related signals
     void selectActiveTool(Tool tool);
+    void selectBrushSettings(int size, QColor &color);
     void setPenColor(const QColor &color);
     void undoAction();
     void redoAction();
@@ -57,6 +59,7 @@ signals:
     void deleteFrame();
     void moveFrame(int fromIndex, int toIndex);
     void resizeCanvas(int width, int height);
+    void setFrame(int frameIndex);
 
     // Animation related signals
     void startAnimation(bool play);
@@ -71,6 +74,7 @@ private slots:
     void colorButtonPressed();
     void undoButtonPressed();
     void redoButtonPressed();
+    void brushSizeChanged();
 
     // Animation related slots
     void playAnimation(const QImage &frameImage);
@@ -84,11 +88,15 @@ private slots:
     void deleteFrameButtonPressed();
     void moveFrameUpButtonPressed();
     void moveFrameDownButtonPressed();
+    void frameSelected();
 
     // File related slots
     void saveFileAction();
     void openFileAction();
     void newFileAction();
+
+public slots:
+    void recieveNewColor(QColor color);
     
 private:
     Ui::MainWindow *ui;
@@ -102,10 +110,19 @@ private:
     void initializeAnimationPreview();
 
     void connectToolButtons();
+    void highlightSelectedTool(QPushButton* button);
     void connectFrameButtons();
     void connectFileActions();
 
+    QColor currentColor = (QColor(Qt::black));
+
 protected:
+    //    virtual void mousePressEvent(QMouseEvent *event);
+    //    virtual void mouseMoveEvent(QMouseEvent *event);
+
+    /// helper method to draw when a mouse occurs.
+    void drawOnEvent(QMouseEvent *event);
+
     void keyPressEvent(QKeyEvent *event);
 };
 

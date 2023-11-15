@@ -5,6 +5,8 @@
 #include <QObject>
 #include <QVector2D>
 #include <QLabel>
+#include "PToolBar.h"
+#include "PEnums.h"
 
 class Model : public QObject
 {
@@ -38,6 +40,9 @@ public:
         /// Generates a blank white frame of size width x height
         void generateFrame(int width, int height);
 
+        /// temporary drawing function type beat
+        void setFramePixel(QImage &frame, int x, int y, uint color);
+
         /// adds an image as the last frame of our animation.
         void push(QImage frame);
 
@@ -49,6 +54,12 @@ public:
 
         /// deletes the last frame of the animation
         void pop();
+
+        /// swap the vector item at the first parameter index with the item at the second parameter index.
+        void swap(int firstIndex, int secondIndex);
+
+        /// clear all the data within the frame class object's frame vector
+        void clearFrames();
     };
 
     class CanvasData
@@ -89,6 +100,9 @@ public:
         /// updates the index of which frame we are currently displaying
         void setCurrentFrameIndex(uint newIndex);
 
+        /// resets all the canvas data
+        void clearCanvasData();
+
         /// converts the screen space pixel coordinates provided to the
         /// coordinate space of the sprite the canvas is displaying.
         QVector2D screenSpaceToImageSpace(QVector2D &screenSpace);
@@ -99,6 +113,7 @@ private:
 
     Frames frames;
     CanvasData canvasSettings;
+    PToolBar toolBar;
     bool justUndid;
 
 public:
@@ -121,7 +136,15 @@ public:
     /// returns a reference to our `CanvasSettings` class
     CanvasData &getCanvasSettings();
 
+public slots:
+    void recieveDrawOnEvent(QImage &image, QPoint pos);
+    void recievePenColor(QColor color);
+    void recieveActiveTool(Tool tool);
+    void recieveBrushSettings(int size, QColor color);
+
 signals:
+    void sendColor(QColor color);
+
     void updateCanvas(QImage& image);
 };
 
