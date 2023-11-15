@@ -39,13 +39,17 @@ void PToolBar::DrawWithCurrentTool(QImage &image, QPoint pos){
 void PToolBar::UpdateCurrentTool(Tool tool){
     if(tool == Tool::Pen){
         currentTool = &pen;
+        emit ColorChanged(currentTool->brushColor);
     } else if(tool == Tool::Eraser){
         currentTool = &eraser;
+        emit ColorChanged(currentTool->brushColor);
     } else if(tool == Tool::Eyedrop){
         currentTool = &eyedropper;
+        emit ColorChanged(currentTool->brushColor);
     }
     else if(tool == Tool::Bucket){
         currentTool = &bucket;
+        emit ColorChanged(currentTool->brushColor);
     }
     emit ToolChanged();
 }
