@@ -255,3 +255,63 @@ void Model::recieveBrushSettings(int size, QColor color)
 
     toolBar.SetCurrentBrushSettings(size, toolBar.CurrentTool()->brushColor);
 }
+void Model::updateFPS(int otherFps)
+{
+    fps = otherFps;
+}
+
+void Model::updatePlay(bool otherPlay)
+{
+    play = otherPlay;
+    if (play)
+        beginAnimation();
+    else
+        endAnimation();
+}
+
+bool Model::getPlayStatus()
+{
+    return play;
+}
+
+
+void Model::playAnimationFrames()
+{
+    if(play)
+    {
+        // Get how often to change the frame in milliseconds
+        int frameTime = calculateDelay();
+        int delay = 0;
+
+        qDebug() << (int)frames.numFrames();
+
+        for (int i = 0; i < (int)frames.numFrames(); i++)
+        {
+            emit updateAnimationPreview(frames.get(i), delay);
+            delay += frameTime;
+        }
+
+    }
+}
+
+void Model::beginAnimation()
+{
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &Model::playAnimationFrames);
+
+    timer->start(calculateDelay() * frames.numFrames());
+
+}
+
+void Model::endAnimation()
+{
+    timer->stop();
+}
+
+double Model::calculateDelay()
+{
+    double delay = (1 / ((double)fps)) * 1000;
+
+    return delay;
+}
+

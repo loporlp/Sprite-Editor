@@ -18,6 +18,7 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QProcess>
+#include <QTimer>
 
 #include "PEnums.h"
 #include "canvas.h"
@@ -69,6 +70,9 @@ signals:
     // File related signals
     void saveFile(const QString &filePath);
     void loadFile(const QString &filePath);
+public slots:
+    // Animation related Slots
+    void playAnimation(const QImage &frameImage);
     void newFile();
 
 private slots:
@@ -79,7 +83,6 @@ private slots:
     void brushSizeChanged();
 
     // Animation related slots
-    void playAnimation(const QImage &frameImage);
     void fpsSliderChanged(int value);
 
     // Frame related slots
@@ -99,7 +102,8 @@ private slots:
 
 public slots:
     void recieveNewColor(QColor color);
-
+    void receiveAnimationFrameData(QImage frame, int delay);
+    
 private:
     Ui::MainWindow *ui;
 

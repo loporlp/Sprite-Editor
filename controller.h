@@ -19,7 +19,7 @@ public:
     void setupFileManagement();
     void setupFrameManagement();
     void setupUndoConnections();
-
+    void setupAnimationConnections();
 private:
     void setupDrawConnections();
 
