@@ -356,6 +356,21 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             newFileAction(); // Ctrl + N: New File
         }
     } else {
+        if (key == Qt::Key_B) {
+            emit selectActiveTool(Tool::Pen); // B: Brush
+            highlightSelectedTool(ui->penButton);
+        } else if (key == Qt::Key_E) {
+            emit selectActiveTool(Tool::Eraser); // E: Eraser
+            highlightSelectedTool(ui->eraserButton);
+        } else if (key == Qt::Key_I) {
+            emit selectActiveTool(Tool::Eyedrop); // I: Eyedropper
+            highlightSelectedTool(ui->eyedropButton);
+        } else if (key == Qt::Key_F) {
+            emit selectActiveTool(Tool::Bucket); // F: Bucket (Fill)
+            highlightSelectedTool(ui->bucketButton);
+        } else if (key == Qt::Key_Space) {
+            emit toggleAnimation();
+        }
         // The keys being pressed aren't relevant here,
         // but maybe it'll be something the canvas cares about
         canvas()->keyPressEvent(event);

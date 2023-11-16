@@ -65,6 +65,7 @@ signals:
 
     // Animation related signals
     void startAnimation(bool play);
+    void toggleAnimation();
     void setFPS(int fps);
 
     // File related signals

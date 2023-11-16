@@ -33,9 +33,9 @@ void Controller::setupUndoConnections()
         model.addUndoStack(&currentImage);
     });
 
-        connect(canvas, &Canvas::canvasMouseReleased, this, [this]() {
-            model.updateFrame(&currentImage);
-        });
+    connect(canvas, &Canvas::canvasMouseReleased, this, [this]() {
+        model.updateFrame(&currentImage);
+    });
 
     connect(&view, &MainWindow::undoAction, this, [this]() { model.undo(); });
     connect(&view, &MainWindow::redoAction, this, [this]() { model.redo(); });
@@ -236,6 +236,10 @@ void Controller::setupAnimationConnections()
     connect(&view, &MainWindow::setFPS, &model, &Model::updateFPS);
 
     connect(&view, &MainWindow::startAnimation, &model, &Model::updatePlay);
+
+    connect(&view, &MainWindow::toggleAnimation, this, [this]() {
+        model.updatePlay(!model.getPlayStatus());
+    });
 
     connect(&model, &Model::updateAnimationPreview, &view, &MainWindow::receiveAnimationFrameData);
 }
