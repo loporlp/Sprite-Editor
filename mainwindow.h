@@ -98,7 +98,6 @@ private slots:
     void fpsSliderChanged(int value);
 
     /// Frame related slots
-    //void updateFrameEditor(const QImage &frameImage, int editingTarget);
     void sizeCanvasAction();
     void addFrameToList();
     void addFrameButtonPressed();

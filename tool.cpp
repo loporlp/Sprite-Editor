@@ -16,7 +16,7 @@
  *
 */
 
-#include <QDebug>
+//#include <QDebug>
 
 #include "tool.h"
 

@@ -14,7 +14,7 @@
  *
 */
 
-#include <QDebug>
+//#include <QDebug>
 #include <QApplication>
 #include <QColor>
 #include <QImage>
@@ -134,7 +134,6 @@ void MainWindow::connectAnimationButtons()
     connect(ui->playButton, &QPushButton::released, this, [this]() { emit startAnimation(true); });
     connect(ui->pauseButton, &QPushButton::released, this, [this]() { emit startAnimation(false); });
     connect(ui->fpsSlider, &QSlider::valueChanged, this, &MainWindow::fpsSliderChanged);
-    //connect(ui->actualSizeCheckBox, &QCheckBox::isChecked, this, [this]() { emit startAnimation(true); });
 }
 
 /**
@@ -241,7 +240,6 @@ void MainWindow::initializeAnimationPreview()
     QPixmap p = QPixmap(ui->animationScreen->size());
     p.fill(QColor(Qt::white));
     ui->animationScreen->setPixmap(p);
-    //ui->frameListWidget->setIconSize(QSize(50, 50));
 
     addFrameToList();
 }
@@ -253,7 +251,6 @@ void MainWindow::initializeAnimationPreview()
 void MainWindow::playAnimation(const QImage &frameImage)
 {
     QPixmap p;
-//    if (actualSize) {
     if (ui->actualSizeCheckBox->isChecked()) {
         p = QPixmap::fromImage(frameImage);
     } else {
@@ -283,20 +280,6 @@ void MainWindow::receiveAnimationFrameData(QImage frame, int delay)
 }
 
 //-----Frame updates-----//
-
-///**
-// * @brief MainWindow::updateFrameEditor - Update the frame editor by displaying the image of the frame and marking it as changed
-// * @param frameImage
-// * @param editingTarget
-// */
-//void MainWindow::updateFrameEditor(const QImage &frameImage, int editingTarget)
-//{
-//    image = frameImage;
-//    QPixmap p = QPixmap::fromImage(frameImage.scaled(QSize(50, 50), Qt::KeepAspectRatio));
-//    frameList.at(editingTarget)->setIcon(QIcon(p));
-//    update();
-//    changed = true;
-//}
 
 /**
  * @brief MainWindow::sizeCanvasAction - Handle the action of resizing the canvas by prompting the user for a new canvas size and emitting the new size

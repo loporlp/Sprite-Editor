@@ -15,7 +15,7 @@
  *
 */
 
-#include <QDebug>
+//#include <QDebug>
 
 #include "toolbar.h"
 

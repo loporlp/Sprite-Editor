@@ -270,21 +270,6 @@ void Controller::setupFrameManagement()
         view.canvas()->setImage(&currentImage);
     });
 
-//    connect(&view, &MainWindow::resizeCanvas, this, [this](int width, int height) {
-//        // Save the current frame
-//        model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex()) = currentImage;
-
-//        // Resize all existing frames
-//        for (int i = 0; i < model.getFrames().numFrames(); ++i) {
-
-//            model.getFrames().get(i) = model.getFrames().get(i).scaled(width, height);
-//        }
-
-//        // Update canvas
-//        currentImage = model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex());
-//        view.canvas()->setImage(&currentImage);
-//    });
-
     connect(&view, &MainWindow::resizeCanvas, this, [this](int width, int height) {
         // Save the current frame
         model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex()) = currentImage;
@@ -304,7 +289,7 @@ void Controller::setupFrameManagement()
             frame = resizedImage;
         }
 
-        // Update canvas
+        // Set the current image and update canvas
         currentImage = model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex());
         view.canvas()->setImage(&currentImage);
     });

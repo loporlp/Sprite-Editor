@@ -20,7 +20,7 @@
 #include <QObject>
 #include <QPixmap>
 #include <algorithm>
-#include <QDebug>
+//#include <QDebug>
 
 #include "model.h"
 
@@ -346,17 +346,6 @@ void Model::CanvasData::clearCanvasData()
 {
     indexOfCurrentFrame = 0;
 }
-
-///**
-// * @brief Model::CanvasData::screenSpaceToImageSpace - Scales between screen and canvas size
-// * @param screenSpace
-// * @return
-// */
-//QVector2D Model::CanvasData::screenSpaceToImageSpace(QVector2D &screenSpace)
-//{
-//    qWarning("screenSpaceToImageSpace() not yet implemented");
-//    return QVector2D(0.0, 0.0);
-//}
 
 /**
  * @brief Model::recieveDrawOnEvent - Receives a draw event and process it

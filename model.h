@@ -122,10 +122,6 @@ public:
 
         /// Resets all the canvas data
         void clearCanvasData();
-
-        /// Converts the screen space pixel coordinates provided to the
-        /// coordinate space of the sprite the canvas is displaying
-        //QVector2D screenSpaceToImageSpace(QVector2D &screenSpace);
     };
 
 private:
