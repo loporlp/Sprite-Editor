@@ -70,10 +70,11 @@ signals:
     // File related signals
     void saveFile(const QString &filePath);
     void loadFile(const QString &filePath);
+    void newFile();
+
 public slots:
     // Animation related Slots
     void playAnimation(const QImage &frameImage);
-    void newFile();
 
 private slots:
     // Tool related slots
