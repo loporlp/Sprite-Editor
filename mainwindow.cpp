@@ -183,13 +183,11 @@ void MainWindow::undoButtonPressed()
 
 void MainWindow::updateCanvas(QImage image)
 {
-    qDebug() << "UPDATE IMAGE";
     canvas()->setImage(&image);
 }
 
 void MainWindow::redoButtonPressed()
 {
-    qDebug() << "REDO EMITTED";
     emit redoAction();
 }
 
@@ -343,7 +341,6 @@ void MainWindow::addFramesToList(int count)
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    qDebug() << event;
     if (event->modifiers().testFlag(Qt::ControlModifier)) {
         if (event->key() == Qt::Key_Z) {
             if (event->modifiers().testFlag(Qt::ShiftModifier)) {
