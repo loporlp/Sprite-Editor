@@ -3,6 +3,9 @@
 #include "mainwindow.h"
 #include "model.h"
 #include <QBuffer>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 Controller::Controller(Model &model, MainWindow &view)
     : model(model)
@@ -30,9 +33,9 @@ void Controller::setupUndoConnections()
         model.addUndoStack(&currentImage);
     });
 
-    connect(canvas, &Canvas::canvasMouseReleased, this, [this]() {
-        model.updateFrame(&currentImage);
-    });
+//    connect(canvas, &Canvas::canvasMouseReleased, this, [this]() {
+//        model.updateFrame(&currentImage);
+//    });
 
     connect(&view, &MainWindow::undoAction, this, [this]() { model.undo(); });
     connect(&view, &MainWindow::redoAction, this, [this]() { model.redo(); });
@@ -71,29 +74,77 @@ void Controller::setupDrawConnections()
 void Controller::setupFileManagement()
 {
     connect(&view, &MainWindow::saveFile, this, [this](QString fileDirectory)
-            {
+    {
                 // save the current frame before saving conventions
                 model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex()) = currentImage;
 
+                QFile file(fileDirectory);
                 QVector<QByteArray> imageDataArray;
-                QByteArray ba;
+                QByteArray bufferArray;
                 for(uint i = 0; i < model.getFrames().numFrames(); i++) {
-                    QBuffer buffer(&ba);
+                    QBuffer buffer(&bufferArray);
                     buffer.open(QIODevice::WriteOnly);
                     model.getFrames().get(i).save(&buffer, "PNG");
-                    imageDataArray.push_back(ba);
-                    ba.clear();
+                    imageDataArray.push_back(bufferArray);
+                    bufferArray.clear();
                 }
-            });
+                QJsonArray jsonArray;
+                for(int i = 0; i < imageDataArray.size(); i++)
+                {
+                    QJsonObject imageObject;
+                    imageObject.insert("QImage", QString(imageDataArray.at(i).toHex()));
+                    imageObject["QImage"] = QString(imageDataArray.at(i).toHex());
+                    jsonArray.insert(i, imageObject);
+                }
+                QJsonDocument jsonDoc;
+                jsonDoc.setArray(jsonArray);
+                file.open(QIODevice::WriteOnly);
+                file.write(jsonDoc.toJson());
+                file.close();
+    });
 
     connect(&view, &MainWindow::loadFile, this, [this](QString fileDirectory)
-            {
-                // TODO: Implementation from a file.
-                //        QVector<QByteArray> imageDataArray;
-                //        bool testt = currentImage.loadFromData(imageDataArray.at(0), "PNG");
-                //        qDebug() << testt;
-                view.canvas()->setImage(&currentImage);
-            });
+    {
+        QFile sessionDataFile(fileDirectory);
+        QString jsonString;
+        if(sessionDataFile.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            jsonString = sessionDataFile.readAll();
+            sessionDataFile.close();
+        }
+
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonString.toUtf8());
+        QJsonArray imageArray = jsonDoc.array();
+        QJsonObject tempObj;
+        QByteArray tempByteArray;
+        QVector<QByteArray> imageDataArray;
+        QImage tempImage;
+
+        model.getFrames().clearFrames();
+        for(auto imageData : imageArray) {
+            QString temp = imageData.toObject().value("QImage").toString();
+            tempObj = imageData.toObject();
+            tempByteArray = tempByteArray.fromHex(temp.toLatin1());
+            imageDataArray.push_back(tempByteArray);
+
+            tempImage.loadFromData(tempByteArray);
+            model.getFrames().push(tempImage);
+            tempByteArray.clear();
+        }
+        model.getCanvasSettings().setCurrentFrameIndex(0);
+        currentImage = model.getFrames().get(0);
+        view.canvas()->setImage(&currentImage);
+        view.addFramesToList(model.getFrames().numFrames()-1);
+    });
+
+    connect(&view, &MainWindow::newFile, this, [this]()
+    {
+        model.getFrames().clearFrames();
+        model.getFrames().generateFrame(64, 64);
+        model.getCanvasSettings().setCurrentFrameIndex(0);
+        currentImage = model.getFrames().get(0);
+        view.canvas()->setImage(&currentImage);
+    });
 }
 
 void Controller::setupFrameManagement()
@@ -133,6 +184,10 @@ void Controller::setupFrameManagement()
     connect(&view, &MainWindow::setFrame, this, [this](int frameIndex) {
         // save the current frame
         model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex()) = currentImage;
+
+        // clear undo / redo button buffers when changing to a new image
+        model.redoBuffer.clear();
+        model.undoBuffer.clear();
 
         model.getCanvasSettings().setCurrentFrameIndex(frameIndex);
 

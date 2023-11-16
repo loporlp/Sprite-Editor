@@ -111,9 +111,7 @@ void Model::updateFrame(QImage *image)
 void Model::addUndoStack(QImage *image)
 {
     QImage imageToAdd = image->copy();
-    qDebug() << "ADDED TO BUFFER";
     undoBuffer.push_back(imageToAdd);
-    qDebug() << &imageToAdd;
 
     if (justUndid) {
         redoBuffer.clear();
@@ -141,9 +139,7 @@ void Model::undo()
 
 void Model::redo()
 {
-    //qDebug() << &undoBuffer.back();
     if (redoBuffer.empty()) {
-        qDebug() << "REDO IS EMPTY";
         return;
     }
 

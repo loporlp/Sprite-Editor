@@ -44,6 +44,7 @@ public:
     Canvas *canvas();
 
     void updateCanvas(QImage image);
+    void addFramesToList(int count);
 
 signals:
     // Tool related signals
@@ -68,6 +69,7 @@ signals:
     // File related signals
     void saveFile(const QString &filePath);
     void loadFile(const QString &filePath);
+    void newFile();
 
 private slots:
     // Tool related slots

@@ -131,7 +131,9 @@ void MainWindow::connectFileActions()
     connect(ui->saveFileAction, &QAction::triggered, this, &MainWindow::saveFileAction);
     connect(ui->newFileAction, &QAction::triggered, this, &MainWindow::newFileAction);
     connect(ui->openFileAction, &QAction::triggered, this, &MainWindow::openFileAction);
+
 }
+
 
 
 //-----Tool updates-----//
@@ -317,12 +319,26 @@ void MainWindow::openFileAction()
                                                     tr("Open File"),
                                                     "C://",
                                                     "Sprite Pixel Image (*.ssp);;");
+    frameList.clear();
+    ui->frameListWidget->clear();
+    addFrameToList();
     emit loadFile(QString(filename));
 }
 
 void MainWindow::newFileAction()
 {
+    frameList.clear();
+    ui->frameListWidget->clear();
+    addFrameToList();
+    emit newFile();
+}
 
+void MainWindow::addFramesToList(int count)
+{
+    for(int i = 0; i < count; i++)
+    {
+        addFrameToList();
+    }
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
