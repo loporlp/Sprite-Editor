@@ -131,7 +131,7 @@ void Model::undo()
 
     redoBuffer.push_back(frames.get(getCanvasSettings().getCurrentFrameIndex()));
 
-    frames.insert(undoBuffer.back(), getCanvasSettings().getCurrentFrameIndex());
+    frames.get(getCanvasSettings().getCurrentFrameIndex()) = undoBuffer.back();
 
 
     emit updateCanvas(undoBuffer.back());
@@ -152,7 +152,7 @@ void Model::redo()
 
     undoBuffer.push_back(frames.get(getCanvasSettings().getCurrentFrameIndex()));
 
-    frames.insert(redoBuffer.back(), getCanvasSettings().getCurrentFrameIndex());
+    frames.get(getCanvasSettings().getCurrentFrameIndex()) = redoBuffer.back();
 
     emit updateCanvas(redoBuffer.back());
 
