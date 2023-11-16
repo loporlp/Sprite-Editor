@@ -1,11 +1,13 @@
 /*
- * CS3505 HW 8
+ * Assignment 8: Pixel Image Software Suite (PISS)
+ * Class Author(s): -----------
+ * Course: CS 3505
+ * Fall 2023
  *
- * A8: Sprite Editor Implementation
+ * MainWindow Header
  *
- * Andrew Wilhelm, Allison Walker,
- * AJ Kennedy, Brett Baxter,
- * David Cosby, Mason Sansom
+ * Brief:
+ *
  *
 */
 
@@ -40,8 +42,6 @@ public:
     // Destructor for the MainWindow class
     ~MainWindow();
 
-    // Tool enums
-    //enum Tool{ Pen, Eraser, Fill, Eyedrop, Bucket };
     Canvas *canvas();
 
     void updateCanvas(QImage image);
@@ -126,9 +126,6 @@ private:
     QColor currentColor = (QColor(Qt::black));
 
 protected:
-    //    virtual void mousePressEvent(QMouseEvent *event);
-    //    virtual void mouseMoveEvent(QMouseEvent *event);
-
     /// helper method to draw when a mouse occurs.
     void drawOnEvent(QMouseEvent *event);
 

@@ -1,3 +1,16 @@
+/*
+ * Assignment 8: Pixel Image Software Suite (PISS)
+ * Class Author(s): -----------
+ * Course: CS 3505
+ * Fall 2023
+ *
+ * Controller Header
+ *
+ * Brief:
+ *
+ *
+*/
+
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
@@ -23,7 +36,6 @@ public:
 private:
     void setupDrawConnections();
 
-    //new from toolGlue
 signals:
     void drawOnEvent(QImage &image, QPoint pos);
 };

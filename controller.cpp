@@ -1,3 +1,16 @@
+/*
+ * Assignment 8: Pixel Image Software Suite (PISS)
+ * Class Author(s): -----------
+ * Course: CS 3505
+ * Fall 2023
+ *
+ * Controller Source
+ *
+ * Brief:
+ *
+ *
+*/
+
 #include "controller.h"
 #include <QBuffer>
 #include <QJsonArray>
@@ -7,6 +20,11 @@
 #include "mainwindow.h"
 #include "model.h"
 
+/**
+ * @brief Controller::Controller - Constructor
+ * @param model
+ * @param view
+ */
 Controller::Controller(Model &model, MainWindow &view)
     : model(model)
     , view(view)
@@ -16,6 +34,9 @@ Controller::Controller(Model &model, MainWindow &view)
     setupConnections();
 }
 
+/**
+ * @brief Controller::setupConnections
+ */
 void Controller::setupConnections()
 {
     setupUndoConnections();
@@ -25,6 +46,9 @@ void Controller::setupConnections()
     setupAnimationConnections();
 }
 
+/**
+ * @brief Controller::setupUndoConnections
+ */
 void Controller::setupUndoConnections()
 {
     Canvas *canvas = view.canvas();
@@ -46,6 +70,9 @@ void Controller::setupUndoConnections()
     });
 }
 
+/**
+ * @brief Controller::setupDrawConnections
+ */
 void Controller::setupDrawConnections()
 {
     Canvas *canvas = view.canvas();
@@ -71,6 +98,9 @@ void Controller::setupDrawConnections()
     });
 }
 
+/**
+ * @brief Controller::setupFileManagement
+ */
 void Controller::setupFileManagement()
 {
     connect(&view, &MainWindow::saveFile, this, [this](QString fileDirectory) {
@@ -166,6 +196,9 @@ void Controller::setupFileManagement()
     });
 }
 
+/**
+ * @brief Controller::setupFrameManagement
+ */
 void Controller::setupFrameManagement()
 {
     connect(&view, &MainWindow::addFrame, this, [this]() {
@@ -231,6 +264,9 @@ void Controller::setupFrameManagement()
     });
 }
 
+/**
+ * @brief Controller::setupAnimationConnections
+ */
 void Controller::setupAnimationConnections()
 {
     connect(&view, &MainWindow::setFPS, &model, &Model::updateFPS);

@@ -1,3 +1,16 @@
+/*
+ * Assignment 8: Pixel Image Software Suite (PISS)
+ * Class Author(s): -----------
+ * Course: CS 3505
+ * Fall 2023
+ *
+ * Model Header
+ *
+ * Brief:
+ *
+ *
+*/
+
 #ifndef MODEL_H
 #define MODEL_H
 

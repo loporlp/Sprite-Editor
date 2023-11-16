@@ -10,6 +10,19 @@
 */
 
 #include "mainwindow.h"
+/*
+ * Assignment 8: Pixel Image Software Suite (PISS)
+ * Class Author(s): -----------
+ * Course: CS 3505
+ * Fall 2023
+ *
+ * MainWindow Source
+ *
+ * Brief:
+ *
+ *
+*/
+
 #include <QDebug>
 #include "ui_mainwindow.h"
 
@@ -44,18 +57,27 @@ MainWindow::MainWindow(QWidget *parent)
     initializeAnimationPreview();
 }
 
+/**
+ * @brief MainWindow::canvas
+ * @return
+ */
 Canvas *MainWindow::canvas()
 {
     return this->ui->canvas;
 }
 
+/**
+ * @brief MainWindow::~MainWindow
+ */
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
 //Connecting signals and slots
-
+/**
+ * @brief MainWindow::connectToolButtons
+ */
 void MainWindow::connectToolButtons()
 {
     connect(ui->penButton, &QPushButton::released, this, [this]() {
@@ -86,6 +108,9 @@ void MainWindow::connectToolButtons()
     connect(ui->brushSizeBox, &QComboBox::currentIndexChanged, this, &MainWindow::brushSizeChanged);
 }
 
+/**
+ * @brief MainWindow::connectFrameButtons
+ */
 void MainWindow::connectFrameButtons()
 {
     connect(ui->addFrameButton, &QPushButton::released, this, &MainWindow::addFrameButtonPressed);
@@ -107,6 +132,9 @@ void MainWindow::connectFrameButtons()
     });
 }
 
+/**
+ * @brief MainWindow::connectAnimationButtons
+ */
 void MainWindow::connectAnimationButtons()
 {
     connect(ui->playButton, &QPushButton::released, this, [this]() { emit startAnimation(true); });
@@ -117,6 +145,9 @@ void MainWindow::connectAnimationButtons()
     });
 }
 
+/**
+ * @brief MainWindow::connectFileActions
+ */
 void MainWindow::connectFileActions()
 {
     connect(ui->saveFileAction, &QAction::triggered, this, &MainWindow::saveFileAction);
@@ -126,6 +157,10 @@ void MainWindow::connectFileActions()
 }
 
 //-----Tool updates-----//
+
+/**
+ * @brief MainWindow::colorButtonPressed
+ */
 void MainWindow::colorButtonPressed()
 {
     QColor color = QColorDialog::getColor();
@@ -138,11 +173,18 @@ void MainWindow::colorButtonPressed()
     ui->selectedColorButton->update();
 }
 
+/**
+ * @brief MainWindow::brushSizeChanged
+ */
 void MainWindow::brushSizeChanged()
 {
     emit selectBrushSettings(ui->brushSizeBox->currentIndex(), currentColor);
 }
 
+/**
+ * @brief MainWindow::recieveNewColor
+ * @param color
+ */
 void MainWindow::recieveNewColor(QColor color)
 {
     currentColor = color;
@@ -152,6 +194,10 @@ void MainWindow::recieveNewColor(QColor color)
     ui->selectedColorButton->update();
 }
 
+/**
+ * @brief MainWindow::highlightSelectedTool
+ * @param button
+ */
 void MainWindow::highlightSelectedTool(QPushButton *button)
 {
     // Reset the style for all tool buttons
@@ -166,22 +212,36 @@ void MainWindow::highlightSelectedTool(QPushButton *button)
     brushSizeChanged();
 }
 
+/**
+ * @brief MainWindow::undoButtonPressed
+ */
 void MainWindow::undoButtonPressed()
 {
     emit undoAction();
 }
 
+/**
+ * @brief MainWindow::updateCanvas
+ * @param image
+ */
 void MainWindow::updateCanvas(QImage image)
 {
     canvas()->setImage(&image);
 }
 
+/**
+ * @brief MainWindow::redoButtonPressed
+ */
 void MainWindow::redoButtonPressed()
 {
     emit redoAction();
 }
 
 //-----Animation updates-----//
+
+/**
+ * @brief MainWindow::initializeAnimationPreview
+ */
 void MainWindow::initializeAnimationPreview()
 {
     QPixmap p = QPixmap(ui->animationScreen->size());
@@ -191,6 +251,10 @@ void MainWindow::initializeAnimationPreview()
     addFrameToList();
 }
 
+/**
+ * @brief MainWindow::playAnimation
+ * @param frameImage
+ */
 void MainWindow::playAnimation(const QImage &frameImage)
 {
     QPixmap p;
@@ -202,18 +266,33 @@ void MainWindow::playAnimation(const QImage &frameImage)
     ui->animationScreen->setPixmap(p);
 }
 
+/**
+ * @brief MainWindow::fpsSliderChanged
+ * @param value
+ */
 void MainWindow::fpsSliderChanged(int value)
 {
     ui->fpsLabel->setText(QString("%1 FPS").arg(value));
     emit setFPS(value);
 }
 
+/**
+ * @brief MainWindow::receiveAnimationFrameData
+ * @param frame
+ * @param delay
+ */
 void MainWindow::receiveAnimationFrameData(QImage frame, int delay)
 {
     QTimer::singleShot(delay, this, [this, frame]() { playAnimation(frame); });
 }
 
 //-----Frame updates-----//
+
+/**
+ * @brief MainWindow::updateFrameEditor
+ * @param frameImage
+ * @param editingTarget
+ */
 void MainWindow::updateFrameEditor(const QImage &frameImage, int editingTarget)
 {
     image = frameImage;
@@ -223,12 +302,18 @@ void MainWindow::updateFrameEditor(const QImage &frameImage, int editingTarget)
     changed = true;
 }
 
+/**
+ * @brief MainWindow::sizeCanvasAction
+ */
 void MainWindow::sizeCanvasAction()
 {
     int size = QInputDialog::getInt(this, "Canvas Size", "Set Canvas Size");
     emit resizeCanvas(size, size);
 }
 
+/**
+ * @brief MainWindow::addFrameToList
+ */
 void MainWindow::addFrameToList()
 {
     QListWidgetItem *item = new QListWidgetItem;
@@ -238,12 +323,18 @@ void MainWindow::addFrameToList()
     frameList.append(item);
 }
 
+/**
+ * @brief MainWindow::addFrameButtonPressed
+ */
 void MainWindow::addFrameButtonPressed()
 {
     addFrameToList();
     emit addFrame();
 }
 
+/**
+ * @brief MainWindow::deleteFrameButtonPressed
+ */
 void MainWindow::deleteFrameButtonPressed()
 {
     int id = ui->frameListWidget->currentItem()->data(0).toInt();
@@ -269,6 +360,9 @@ void MainWindow::deleteFrameButtonPressed()
     }
 }
 
+/**
+ * @brief MainWindow::moveFrameUpButtonPressed
+ */
 void MainWindow::moveFrameUpButtonPressed()
 {
     int id = ui->frameListWidget->currentItem()->data(0).toInt();
@@ -279,6 +373,9 @@ void MainWindow::moveFrameUpButtonPressed()
     emit setFrame(id - 1);
 }
 
+/**
+ * @brief MainWindow::moveFrameDownButtonPressed
+ */
 void MainWindow::moveFrameDownButtonPressed()
 {
     int id = ui->frameListWidget->currentItem()->data(0).toInt();
@@ -289,6 +386,9 @@ void MainWindow::moveFrameDownButtonPressed()
     emit setFrame(id + 1);
 }
 
+/**
+ * @brief MainWindow::frameSelected
+ */
 void MainWindow::frameSelected()
 {
     int id = ui->frameListWidget->currentItem()->data(0).toInt();
@@ -296,6 +396,10 @@ void MainWindow::frameSelected()
 }
 
 //-----File updates-----//
+
+/**
+ * @brief MainWindow::saveFileAction
+ */
 void MainWindow::saveFileAction()
 {
     QString fileDirectory = QFileDialog::getSaveFileName(this,
@@ -306,6 +410,9 @@ void MainWindow::saveFileAction()
     emit saveFile(QString(fileDirectory));
 }
 
+/**
+ * @brief MainWindow::openFileAction
+ */
 void MainWindow::openFileAction()
 {
     QString filename = QFileDialog::getOpenFileName(this,
@@ -318,6 +425,9 @@ void MainWindow::openFileAction()
     emit loadFile(QString(filename));
 }
 
+/**
+ * @brief MainWindow::newFileAction
+ */
 void MainWindow::newFileAction()
 {
     frameList.clear();
@@ -326,6 +436,10 @@ void MainWindow::newFileAction()
     emit newFile();
 }
 
+/**
+ * @brief MainWindow::addFramesToList
+ * @param count
+ */
 void MainWindow::addFramesToList(int count)
 {
     for (int i = 0; i < count; i++) {
@@ -333,42 +447,70 @@ void MainWindow::addFramesToList(int count)
     }
 }
 
+/**
+ * @brief MainWindow::keyPressEvent
+ * @param event
+ */
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     int key = event->key();
     bool controlIsDown = event->modifiers().testFlag(Qt::ControlModifier);
     bool shiftIsDown = event->modifiers().testFlag(Qt::ShiftModifier);
 
-    if (controlIsDown) {
-        if (key == Qt::Key_Z) {
-            if (shiftIsDown) {
+    if (controlIsDown)
+    {
+        if (key == Qt::Key_Z)
+        {
+            if (shiftIsDown)
+            {
                 emit redoAction(); // Ctrl + Shift + Z: Redo
-            } else {
+            }
+            else
+            {
                 emit undoAction(); // Ctrl + Z: Undo
             }
-        } else if (key == Qt::Key_Y) {
+        }
+        else if (key == Qt::Key_Y)
+        {
             emit redoAction(); // Ctrl + Y: Redo
-        } else if (key == Qt::Key_S) {
+        }
+        else if (key == Qt::Key_S)
+        {
             saveFileAction(); // Ctrl + S: Save File
-        } else if (key == Qt::Key_O) {
+        }
+        else if (key == Qt::Key_O)
+        {
             openFileAction(); // Ctrl + O: Open File
-        } else if (key == Qt::Key_N) {
+        }
+        else if (key == Qt::Key_N)
+        {
             newFileAction(); // Ctrl + N: New File
         }
-    } else {
-        if (key == Qt::Key_B) {
+    }
+    else
+    {
+        if (key == Qt::Key_B)
+        {
             emit selectActiveTool(ToolType::Pen); // B: Brush
             highlightSelectedTool(ui->penButton);
-        } else if (key == Qt::Key_E) {
+        }
+        else if (key == Qt::Key_E)
+        {
             emit selectActiveTool(ToolType::Eraser); // E: Eraser
             highlightSelectedTool(ui->eraserButton);
-        } else if (key == Qt::Key_I) {
+        }
+        else if (key == Qt::Key_I)
+        {
             emit selectActiveTool(ToolType::Eyedrop); // I: Eyedropper
             highlightSelectedTool(ui->eyedropButton);
-        } else if (key == Qt::Key_F) {
+        }
+        else if (key == Qt::Key_F)
+        {
             emit selectActiveTool(ToolType::Bucket); // F: Bucket (Fill)
             highlightSelectedTool(ui->bucketButton);
-        } else if (key == Qt::Key_Space) {
+        }
+        else if (key == Qt::Key_Space)
+        {
             emit toggleAnimation();
         }
         // The keys being pressed aren't relevant here,
