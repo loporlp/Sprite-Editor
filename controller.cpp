@@ -19,6 +19,7 @@ void Controller::setupConnections()
     setupDrawConnections();
     setupFileManagement();
     setupFrameManagement();
+    setupAnimationConnections();
 
 }
 
@@ -153,5 +154,14 @@ void Controller::setupFrameManagement()
         currentImage = model.getFrames().get(secondFrame);
         view.canvas()->setImage(&currentImage);
     });
+}
+
+void Controller::setupAnimationConnections()
+{
+    connect(&view, &MainWindow::setFPS, &model, &Model::updateFPS);
+
+    connect(&view, &MainWindow::startAnimation, &model, &Model::updatePlay);
+
+    connect(&model, &Model::updateAnimationPreview, &view, &MainWindow::receiveAnimationFrameData);
 }
 

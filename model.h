@@ -5,8 +5,10 @@
 #include <QObject>
 #include <QVector2D>
 #include <QLabel>
+#include <QTimer>
 #include "PToolBar.h"
 #include "PEnums.h"
+
 
 class Model : public QObject
 {
@@ -115,6 +117,9 @@ private:
     CanvasData canvasSettings;
     PToolBar toolBar;
     bool justUndid;
+    int fps = 2;
+    bool play = false;
+    QTimer *timer;
 
 public:
     explicit Model(QObject *parent = nullptr);
@@ -136,16 +141,32 @@ public:
     /// returns a reference to our `CanvasSettings` class
     CanvasData &getCanvasSettings();
 
+    /// Animation Methods
+    void playAnimationFrames();
+
+    void beginAnimation();
+
+    void endAnimation();
+
+    bool getPlayStatus();
+
+    double calculateDelay();
+
 public slots:
     void recieveDrawOnEvent(QImage &image, QPoint pos);
     void recievePenColor(QColor color);
     void recieveActiveTool(Tool tool);
     void recieveBrushSettings(int size, QColor color);
+    void updateFPS(int fps);
+    void updatePlay(bool play);
 
 signals:
     void sendColor(QColor color);
 
     void updateCanvas(QImage& image);
+
+    void updateAnimationPreview(QImage frame, int frameTime);
+
 };
 
 #endif // MODEL_H

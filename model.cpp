@@ -265,6 +265,10 @@ void Model::updateFPS(int otherFps)
 void Model::updatePlay(bool otherPlay)
 {
     play = otherPlay;
+    if (play)
+        beginAnimation();
+    else
+        endAnimation();
 }
 
 bool Model::getPlayStatus()
@@ -281,9 +285,10 @@ void Model::playAnimationFrames()
         int frameTime = calculateDelay();
         int delay = 0;
 
+        qDebug() << (int)frames.numFrames();
+
         for (int i = 0; i < (int)frames.numFrames(); i++)
         {
-
             emit updateAnimationPreview(frames.get(i), delay);
             delay += frameTime;
         }
@@ -293,19 +298,22 @@ void Model::playAnimationFrames()
 
 void Model::beginAnimation()
 {
-    QTimer *timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, QOverload<>::of(&Model::playAnimationFrames));
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &Model::playAnimationFrames);
 
     timer->start(calculateDelay() * frames.numFrames());
 
-    while(play)
-    {}
+}
 
+void Model::endAnimation()
+{
     timer->stop();
 }
 
 double Model::calculateDelay()
 {
-    return (1 / fps) * 100;
+    double delay = (1 / ((double)fps)) * 1000;
+
+    return delay;
 }
 

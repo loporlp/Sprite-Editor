@@ -82,7 +82,6 @@ private slots:
 
     // Animation related slots
     void fpsSliderChanged(int value);
-    void receiveAnimationFrameData(QImage frame, int delay);
 
     // Frame related slots
     void updateFrameEditor(const QImage &frameImage, int editingTarget);
@@ -101,6 +100,7 @@ private slots:
 
 public slots:
     void recieveNewColor(QColor color);
+    void receiveAnimationFrameData(QImage frame, int delay);
     
 private:
     Ui::MainWindow *ui;
