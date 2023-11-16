@@ -33,9 +33,9 @@ void Controller::setupUndoConnections()
         model.addUndoStack(&currentImage);
     });
 
-    //    connect(canvas, &Canvas::canvasMouseReleased, this, [this]() {
-    //        model.updateFrame(&currentImage);
-    //    });
+    connect(canvas, &Canvas::canvasMouseReleased, this, [this]() {
+        model.updateFrame(&currentImage);
+    });
 
     connect(&view, &MainWindow::undoAction, this, [this]() { model.undo(); });
     connect(&view, &MainWindow::redoAction, this, [this]() { model.redo(); });

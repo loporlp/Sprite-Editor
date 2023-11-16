@@ -39,6 +39,8 @@ MainWindow::MainWindow(QWidget *parent)
     connectToolButtons();
 
     connect(ui->colorButton, &QPushButton::released, this, &MainWindow::colorButtonPressed);
+    connect(ui->selectedColorButton, &QPushButton::released, this, &MainWindow::colorButtonPressed);
+
     //connect(ui->eyedropButton, &QPushButton::released, this, &MainWindow::eyedropButtonPressed);
     connect(ui->undoButton, &QPushButton::released, this, &MainWindow::undoButtonPressed);
     connect(ui->redoButton, &QPushButton::released, this, &MainWindow::redoButtonPressed);
