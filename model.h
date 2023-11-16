@@ -2,20 +2,19 @@
 #define MODEL_H
 
 #include <QImage>
+#include <QLabel>
 #include <QObject>
 #include <QVector2D>
 #include <QLabel>
 #include <QTimer>
 #include "PToolBar.h"
 #include "PEnums.h"
+#include "PToolBar.h"
 
 
 class Model : public QObject
 {
-
-
 public:
-
     class Frames
     {
         std::vector<QImage> frames;
@@ -31,7 +30,7 @@ public:
         uint numFrames();
 
         /// returns the frame at index
-        QImage& get(uint index);
+        QImage &get(uint index);
 
         /// returns the first frame of the animation
         QImage first();
@@ -128,7 +127,7 @@ public:
 
     //adds to the undo stack
     void addUndoStack(QImage *image);
-
+    void clearBuffers();
     void undo();
 
     void redo();
@@ -162,9 +161,7 @@ public slots:
 
 signals:
     void sendColor(QColor color);
-
     void updateCanvas(QImage& image);
-
     void updateAnimationPreview(QImage frame, int frameTime);
 
 };

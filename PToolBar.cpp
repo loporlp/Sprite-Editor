@@ -16,7 +16,8 @@
 #include "PToolBar.h"
 #include <QDebug>
 
-PTool* PToolBar::CurrentTool(){
+PTool *PToolBar::CurrentTool()
+{
     return currentTool;
 }
 
@@ -24,11 +25,10 @@ PTool* PToolBar::CurrentTool(){
  * @brief PToolBar::DrawWithCurrentTool
  * Draws with the currently selected tool.
  */
-void PToolBar::DrawWithCurrentTool(QImage &image, QPoint pos){
-
+void PToolBar::DrawWithCurrentTool(QImage &image, QPoint pos)
+{
     currentTool->Draw(image, pos);
     emit CanvasChanged();
-
 }
 
 /**
@@ -36,18 +36,18 @@ void PToolBar::DrawWithCurrentTool(QImage &image, QPoint pos){
  * Changes the current tool.
  * @param tool - The new tool to set.
  */
-void PToolBar::UpdateCurrentTool(Tool tool){
-    if(tool == Tool::Pen){
+void PToolBar::UpdateCurrentTool(Tool tool)
+{
+    if (tool == Tool::Pen) {
         currentTool = &pen;
         emit ColorChanged(currentTool->brushColor);
-    } else if(tool == Tool::Eraser){
+    } else if (tool == Tool::Eraser) {
         currentTool = &eraser;
         emit ColorChanged(currentTool->brushColor);
-    } else if(tool == Tool::Eyedrop){
+    } else if (tool == Tool::Eyedrop) {
         currentTool = &eyedropper;
         emit ColorChanged(currentTool->brushColor);
-    }
-    else if(tool == Tool::Bucket){
+    } else if (tool == Tool::Bucket) {
         currentTool = &bucket;
         emit ColorChanged(currentTool->brushColor);
     }
@@ -60,12 +60,14 @@ void PToolBar::UpdateCurrentTool(Tool tool){
  * @param size - The new brush size.
  * @param color - The new brush color.
  */
-void PToolBar::SetCurrentBrushSettings(int size, QColor color){
+void PToolBar::SetCurrentBrushSettings(int size, QColor color)
+{
     currentTool->SetBrushSettings(size, color);
 }
 
-void PToolBar::SetPenBrushColor(QColor color){
-//    currentTool->SetBrushSettings(tool.brushSize, color);
+void PToolBar::SetPenBrushColor(QColor color)
+{
+    //    currentTool->SetBrushSettings(tool.brushSize, color);
     pen.brushColor = color;
     bucket.brushColor = color;
     tool.brushColor = color;

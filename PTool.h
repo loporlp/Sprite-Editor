@@ -17,30 +17,36 @@
 #ifndef PTOOL_H
 #define PTOOL_H
 
-#include <QObject>
 #include <QColor>
-#include <QMouseEvent>
 #include <QImage>
+#include <QMouseEvent>
+#include <QObject>
 
-class PTool: public QObject{
+class PTool : public QObject
+{
     Q_OBJECT
 public:
     int brushSize;
     QColor brushColor;
     // Default constructor, brush size is 1 at index 0, color is black.
-    PTool() : brushSize(0), brushColor(QColor(0,0,0)) {}
+    PTool()
+        : brushSize(0)
+        , brushColor(QColor(0, 0, 0))
+    {}
     virtual void Draw(QImage &image, QPoint pos);
     void SetBrushSettings(int size, QColor color);
 };
 
-class PPen : public PTool{
+class PPen : public PTool
+{
     Q_OBJECT
 public:
     PPen() {}
     void Draw(QImage &image, QPoint pos);
 };
 
-class PEyedropper : public PTool{
+class PEyedropper : public PTool
+{
     Q_OBJECT
 public:
     PEyedropper() {}
@@ -49,14 +55,16 @@ signals:
     void colorRetrieved(QColor color);
 };
 
-class PEraser : public PTool{
+class PEraser : public PTool
+{
     Q_OBJECT
 public:
     PEraser() {}
     void Draw(QImage &image, QPoint pos);
 };
 
-class PBucket : public PTool{
+class PBucket : public PTool
+{
     Q_OBJECT
 public:
     PBucket() {}

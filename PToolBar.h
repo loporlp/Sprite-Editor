@@ -16,12 +16,13 @@
 #ifndef PTOOLBAR_H
 #define PTOOLBAR_H
 
-#include <QObject>
 #include <QMouseEvent>
-#include "PTool.h"
+#include <QObject>
 #include "PEnums.h"
+#include "PTool.h"
 
-class PToolBar: public QObject{
+class PToolBar : public QObject
+{
     Q_OBJECT
 private:
     // Test tool, will be replaced by other classes that inherit from PTool
@@ -31,12 +32,17 @@ private:
     PEyedropper eyedropper;
     PBucket bucket;
     // Pointer to the current tool.
-    PTool* currentTool;
+    PTool *currentTool;
+
 public:
     // Constructor, by default the current tool is the pen tool.
-    PToolBar(): currentTool(&pen) { connect(&eyedropper, &PEyedropper::colorRetrieved, this, &PToolBar::SetPenBrushColor); }
+    PToolBar()
+        : currentTool(&pen)
+    {
+        connect(&eyedropper, &PEyedropper::colorRetrieved, this, &PToolBar::SetPenBrushColor);
+    }
     // Returns a pointer to the current tool.
-    PTool* CurrentTool();
+    PTool *CurrentTool();
 public slots:
     // Tells the toolbar to draw with the currently selected tool, this also may change.
     // Other option: CurrentTool()->Draw();
