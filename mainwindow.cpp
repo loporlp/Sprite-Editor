@@ -335,15 +335,25 @@ void MainWindow::addFramesToList(int count)
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    if (event->modifiers().testFlag(Qt::ControlModifier)) {
-        if (event->key() == Qt::Key_Z) {
-            if (event->modifiers().testFlag(Qt::ShiftModifier)) {
+    int key = event->key();
+    bool controlIsDown = event->modifiers().testFlag(Qt::ControlModifier);
+    bool shiftIsDown = event->modifiers().testFlag(Qt::ShiftModifier);
+
+    if (controlIsDown) {
+        if (key == Qt::Key_Z) {
+            if (shiftIsDown) {
                 emit redoAction(); // Ctrl + Shift + Z: Redo
             } else {
                 emit undoAction(); // Ctrl + Z: Undo
             }
-        } else if (event->key() == Qt::Key_Y) {
+        } else if (key == Qt::Key_Y) {
             emit redoAction(); // Ctrl + Y: Redo
+        } else if (key == Qt::Key_S) {
+            saveFileAction(); // Ctrl + S: Save File
+        } else if (key == Qt::Key_O) {
+            openFileAction(); // Ctrl + O: Open File
+        } else if (key == Qt::Key_N) {
+            newFileAction(); // Ctrl + N: New File
         }
     } else {
         // The keys being pressed aren't relevant here,
