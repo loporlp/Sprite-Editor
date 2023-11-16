@@ -41,6 +41,7 @@ private:
     QPoint canvasToSpriteSpace(QPoint canvasSpace);
     void gestureEvent(QGestureEvent *event);
     void pinchEvent(QPinchGesture *event);
+    void zoomAtPoint(float scaleFactorMultiplier, QPointF mousePos);
 
 signals:
     void canvasMousePressed(QPoint spriteMouseLocation);

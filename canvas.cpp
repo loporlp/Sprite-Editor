@@ -120,18 +120,22 @@ void Canvas::gestureEvent(QGestureEvent *event)
     }
 }
 
-/// Processes pinch gestues for zooming. Updates the canvas's scaleFactor and offset
-/// so that the pixel underneath the mouse when the user begins zooming stays fixed
-/// in place.
+/// Processes pinch gestues for zooming. Zooms in or out at the mouse position.
 void Canvas::pinchEvent(QPinchGesture *event)
 {
-    scaleFactor = fmin(MAX_ZOOM, scaleFactor * event->scaleFactor());
+    zoomAtPoint(event->scaleFactor(), event->centerPoint());
+}
+
+/// Updates the canvas's scaleFactor and offset so that the pixel underneath the
+/// coordinate `centerPoint` when the user begins zooming stays fixed in place.
+void Canvas::zoomAtPoint(float scaleFactorMultiplier, QPointF centerPoint)
+{
+    scaleFactor = fmin(MAX_ZOOM, scaleFactor * scaleFactorMultiplier);
     if (scaleFactor == MAX_ZOOM) {
         return;
     }
-
-    QPointF centerRelative = offset - event->centerPoint();
-    QPointF centerScaled = centerRelative * event->scaleFactor();
+    QPointF centerRelative = offset - centerPoint;
+    QPointF centerScaled = centerRelative * scaleFactorMultiplier;
 
     QPointF translation = (centerScaled - centerRelative);
     offset += translation.toPoint();
@@ -149,14 +153,20 @@ void Canvas::pinchEvent(QPinchGesture *event)
 void Canvas::keyPressEvent(QKeyEvent *event)
 {
     QPoint moveDirection = QPoint(0, 0);
-    if (event->key() == Qt::Key_Left) {
+    int key = event->key();
+
+    if (key == Qt::Key_Left) {
         moveDirection = QPoint(1, 0);
-    } else if (event->key() == Qt::Key_Right) {
+    } else if (key == Qt::Key_Right) {
         moveDirection = QPoint(-1, 0);
-    } else if (event->key() == Qt::Key_Up) {
+    } else if (key == Qt::Key_Up) {
         moveDirection = QPoint(0, 1);
-    } else if (event->key() == Qt::Key_Down) {
+    } else if (key == Qt::Key_Down) {
         moveDirection = QPoint(0, -1);
+    } else if (key == Qt::Key_Plus || key == Qt::Key_Equal) {
+        zoomAtPoint(1.25, QPointF(width() / 2, height() / 2));
+    } else if (key == Qt::Key_Minus || key == Qt::Key_Underscore) {
+        zoomAtPoint(0.8, QPointF(width() / 2, height() / 2));
     }
 
     if (moveDirection.manhattanLength() != 0) {
