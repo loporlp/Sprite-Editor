@@ -104,8 +104,9 @@ void Model::Frames::setFramePixel(QImage &frame, int x, int y, uint color)
 
 void Model::updateFrame(QImage *image)
 {
+    qDebug() << "updated frame " << getCanvasSettings().getCurrentFrameIndex();
     QImage imageToUpdate = image->copy();
-    frames.insert(imageToUpdate, getCanvasSettings().getCurrentFrameIndex());
+    frames.get(getCanvasSettings().getCurrentFrameIndex()) = imageToUpdate;
 }
 
 void Model::addUndoStack(QImage *image)
@@ -156,6 +157,12 @@ void Model::redo()
     emit updateCanvas(redoBuffer.back());
 
     redoBuffer.pop_back();
+}
+
+void Model::clearBuffers()
+{
+    undoBuffer.clear();
+    redoBuffer.clear();
 }
 
 //-----Model::CanvasData-----//

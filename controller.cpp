@@ -131,6 +131,9 @@ void Controller::setupFrameManagement()
     });
 
     connect(&view, &MainWindow::setFrame, this, [this](int frameIndex) {
+        //clear undo and redo buffers when switching frames
+        model.clearBuffers();
+
         // save the current frame
         model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex()) = currentImage;
 
