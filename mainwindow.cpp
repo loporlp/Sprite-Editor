@@ -30,43 +30,18 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
     grabKeyboard();
-    // Set up Animation preview screen
-    initializeAnimationPreview();
-
-    // Connect signals and slots for tools
-    connectToolButtons();
-
-    connect(ui->colorButton, &QPushButton::released, this, &MainWindow::colorButtonPressed);
-    connect(ui->selectedColorButton, &QPushButton::released, this, &MainWindow::colorButtonPressed);
-
-    //connect(ui->eyedropButton, &QPushButton::released, this, &MainWindow::eyedropButtonPressed);
-    connect(ui->undoButton, &QPushButton::released, this, &MainWindow::undoButtonPressed);
-    connect(ui->redoButton, &QPushButton::released, this, &MainWindow::redoButtonPressed);
-    connect(ui->brushSizeBox, &QComboBox::currentIndexChanged, this, &MainWindow::brushSizeChanged);
-
-    // Connect signals and slots for frames
-    //connect(ui->frameListWidget, &QListWidget::itemClicked, this, &MainWindow::setFrameToEdit);
-    connect(ui->frameListWidget, &QListWidget::itemClicked, this, [this](QListWidgetItem *item) {
-        emit setFrameToEdit(item->data(0).toInt());
-    });
-
-    connectFrameButtons();
-
-    // Connect signals and slots for animation
-    connect(ui->playButton, &QPushButton::released, this, [this]() { emit startAnimation(true); });
-    connect(ui->pauseButton, &QPushButton::released, this, [this]() { emit startAnimation(false); });
-
-    connect(ui->fpsSlider, &QSlider::valueChanged, this, &MainWindow::fpsSliderChanged);
-
-    connect(ui->resizeCanvasAction, &QAction::triggered, this, &MainWindow::sizeCanvasAction);
-    connect(ui->actualSizeCheckBox, &QCheckBox::clicked, this, [this]() {
-        emit startAnimation(true);
-    });
 
     // Connect signals and slots for files
     connectFileActions();
+    // Connect signals and slots for tools
+    connectToolButtons();
+    // Connect signals and slots for frames
+    connectFrameButtons();
+    // Connect signals and slots for animation
+    connectAnimationButtons();
+    // Set up Animation preview screen
+    initializeAnimationPreview();
 }
 
 Canvas *MainWindow::canvas()
@@ -102,6 +77,13 @@ void MainWindow::connectToolButtons()
         emit selectActiveTool(Tool::Bucket);
         highlightSelectedTool(ui->bucketButton);
     });
+
+    connect(ui->colorButton, &QPushButton::released, this, &MainWindow::colorButtonPressed);
+    connect(ui->selectedColorButton, &QPushButton::released, this, &MainWindow::colorButtonPressed);
+
+    connect(ui->undoButton, &QPushButton::released, this, &MainWindow::undoButtonPressed);
+    connect(ui->redoButton, &QPushButton::released, this, &MainWindow::redoButtonPressed);
+    connect(ui->brushSizeBox, &QComboBox::currentIndexChanged, this, &MainWindow::brushSizeChanged);
 }
 
 void MainWindow::connectFrameButtons()
@@ -120,6 +102,19 @@ void MainWindow::connectFrameButtons()
             this,
             &MainWindow::moveFrameDownButtonPressed);
     connect(ui->frameListWidget, &QListWidget::itemClicked, this, &MainWindow::frameSelected);
+    connect(ui->frameListWidget, &QListWidget::itemClicked, this, [this](QListWidgetItem *item) {
+        emit setFrameToEdit(item->data(0).toInt());
+    });
+}
+
+void MainWindow::connectAnimationButtons()
+{
+    connect(ui->playButton, &QPushButton::released, this, [this]() { emit startAnimation(true); });
+    connect(ui->pauseButton, &QPushButton::released, this, [this]() { emit startAnimation(false); });
+    connect(ui->fpsSlider, &QSlider::valueChanged, this, &MainWindow::fpsSliderChanged);
+    connect(ui->actualSizeCheckBox, &QCheckBox::clicked, this, [this]() {
+        emit startAnimation(true);
+    });
 }
 
 void MainWindow::connectFileActions()
@@ -127,6 +122,7 @@ void MainWindow::connectFileActions()
     connect(ui->saveFileAction, &QAction::triggered, this, &MainWindow::saveFileAction);
     connect(ui->newFileAction, &QAction::triggered, this, &MainWindow::newFileAction);
     connect(ui->openFileAction, &QAction::triggered, this, &MainWindow::openFileAction);
+    connect(ui->resizeCanvasAction, &QAction::triggered, this, &MainWindow::sizeCanvasAction);
 }
 
 //-----Tool updates-----//
@@ -214,9 +210,8 @@ void MainWindow::fpsSliderChanged(int value)
 
 void MainWindow::receiveAnimationFrameData(QImage frame, int delay)
 {
-    QTimer::singleShot(delay, this, [this, frame]() {playAnimation(frame);});
+    QTimer::singleShot(delay, this, [this, frame]() { playAnimation(frame); });
 }
-
 
 //-----Frame updates-----//
 void MainWindow::updateFrameEditor(const QImage &frameImage, int editingTarget)

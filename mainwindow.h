@@ -120,6 +120,7 @@ private:
     void highlightSelectedTool(QPushButton *button);
     void connectFrameButtons();
     void connectFileActions();
+    void connectAnimationButtons();
 
     QColor currentColor = (QColor(Qt::black));
 
