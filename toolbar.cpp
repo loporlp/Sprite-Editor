@@ -6,16 +6,15 @@
  *
  * PToolBar Source
  *
- * File reviewed by: -----------
+ * File reviewed by: Brett Baxter, Allison Walker
  *
  * Brief:
- * The PToolBar manages the different types of tools available
+ * The ToolBar manages the different types of tools available
  * in PISS. It stores one of each type of tool and a pointer to
  * the current tool.
  *
+ *
 */
-
-//#include <QDebug>
 
 #include "toolbar.h"
 

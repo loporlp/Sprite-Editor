@@ -6,10 +6,11 @@
  *
  * Enums Header
  *
- * File reviewed by: -----------
+ * File reviewed by: Brett Baxter, Allison Walker
  *
  * Brief:
  * A place for all enums for use by the project.
+ *
  *
 */
 

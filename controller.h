@@ -1,12 +1,13 @@
 /*
  * Assignment 8: Pixel Image Software Suite (PISS)
- * Class Author(s): -----------
+ * Class Author(s): David Cosby, Andrew Wilhelm, Allison Walker,
+ * Mason Sansom, AJ Kennedy, Brett Baxter
  * Course: CS 3505
  * Fall 2023
  *
  * Controller Header
  *
- * File reviewed by: -----------
+ * File reviewed by: Brett Baxter, Allison Walker
  *
  * Brief:
  * Controls and sets up connections between

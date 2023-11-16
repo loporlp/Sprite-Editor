@@ -6,7 +6,7 @@
  *
  * MainWindow Source
  *
- * File reviewed by: -----------
+ * File reviewed by: Brett Baxter, Allison Walker
  *
  * Brief: The main window sets up the
  * programs front end UI and button related actions.
@@ -14,7 +14,6 @@
  *
 */
 
-//#include <QDebug>
 #include <QApplication>
 #include <QColor>
 #include <QImage>

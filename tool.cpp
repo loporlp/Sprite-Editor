@@ -6,17 +6,16 @@
  *
  * PTool Source
  *
- * File reviewed by: -----------
+ * File reviewed by: Brett Baxter, Allison Walker
  *
  * Brief:
- * The PTool is the base class that all tools will
+ * The Tool is the base class that all tools will
  * inherit from. It has a base brush size and color, a way to set
  * it, and a virtual draw method meant to be overriden
  * by each tool.
  *
+ *
 */
-
-//#include <QDebug>
 
 #include "tool.h"
 
@@ -27,7 +26,6 @@
  */
 void Tool::draw(QImage &image, QPoint pos)
 {
-    qDebug() << "PTool Draw";
 }
 
 /**

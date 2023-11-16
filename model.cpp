@@ -1,17 +1,19 @@
 /*
  * Assignment 8: Pixel Image Software Suite (PISS)
- * Class Author(s): -----------
+ * Class Author(s): David Cosby, Andrew Wilhelm, Allison Walker,
+ * Mason Sansom, AJ Kennedy, Brett Baxter
  * Course: CS 3505
  * Fall 2023
  *
  * Model Source
  *
- * File reviewed by: -----------
+ * File reviewed by: Brett Baxter, Allison Walker
  *
  * Brief:
  * The Model class represents the core
  * Frame and Canvas relation logic of
  * the Pixel Image Software Suite (PISS).
+ *
  *
 */
 
@@ -20,7 +22,6 @@
 #include <QObject>
 #include <QPixmap>
 #include <algorithm>
-//#include <QDebug>
 
 #include "model.h"
 
