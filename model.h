@@ -120,7 +120,7 @@ public:
 
     //adds to the undo stack
     void addUndoStack(QImage *image);
-
+    void clearBuffers();
     void undo();
 
     void redo();
