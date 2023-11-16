@@ -24,7 +24,7 @@ Model::Model(QObject *parent)
     , canvasSettings(QVector2D(frames.first().width(), frames.first().height()))
     , justUndid(false)
 {
-    connect(&toolBar, &PToolBar::ColorChanged, this, &Model::recievePenColor);
+    connect(&toolBar, &ToolBar::colorChanged, this, &Model::recievePenColor);
 }
 
 //-----Model::Frames-----//
@@ -214,7 +214,7 @@ void Model::recieveDrawOnEvent(QImage &image, QPoint pos)
     int brushSize = toolBar.CurrentTool()->brushSize;
 
     if (brushSize == 0) {
-        toolBar.DrawWithCurrentTool(image, pos);
+        toolBar.drawWithCurrentTool(image, pos);
     } else {
         // Calculate and iterate of neighboring points based on the brush size
         for (int dx = -brushSize; dx <= brushSize; ++dx) {
@@ -223,7 +223,7 @@ void Model::recieveDrawOnEvent(QImage &image, QPoint pos)
 
                 // Check if the current position is within the image boundaries
                 if (image.rect().contains(currentPos)) {
-                    toolBar.DrawWithCurrentTool(image, currentPos);
+                    toolBar.drawWithCurrentTool(image, currentPos);
                 }
             }
         }
@@ -232,20 +232,20 @@ void Model::recieveDrawOnEvent(QImage &image, QPoint pos)
 
 void Model::recievePenColor(QColor color)
 {
-    toolBar.SetCurrentBrushSettings(toolBar.CurrentTool()->brushSize, color);
+    toolBar.setCurrentBrushSettings(toolBar.CurrentTool()->brushSize, color);
     emit sendColor(color);
 }
 
-void Model::recieveActiveTool(Tool tool)
+void Model::recieveActiveTool(ToolType tool)
 {
-    if (tool == Tool::Pen) {
-        toolBar.UpdateCurrentTool(Tool::Pen);
-    } else if (tool == Tool::Eraser) {
-        toolBar.UpdateCurrentTool(Tool::Eraser);
-    } else if (tool == Tool::Eyedrop) {
-        toolBar.UpdateCurrentTool(Tool::Eyedrop);
-    } else if (tool == Tool::Bucket) {
-        toolBar.UpdateCurrentTool(Tool::Bucket);
+    if (tool == ToolType::Pen) {
+        toolBar.updateCurrentTool(ToolType::Pen);
+    } else if (tool == ToolType::Eraser) {
+        toolBar.updateCurrentTool(ToolType::Eraser);
+    } else if (tool == ToolType::Eyedrop) {
+        toolBar.updateCurrentTool(ToolType::Eyedrop);
+    } else if (tool == ToolType::Bucket) {
+        toolBar.updateCurrentTool(ToolType::Bucket);
     }
 }
 
@@ -253,7 +253,7 @@ void Model::recieveBrushSettings(int size, QColor color)
 {
     //    toolBar.SetCurrentBrushSettings(size, color);
 
-    toolBar.SetCurrentBrushSettings(size, toolBar.CurrentTool()->brushColor);
+    toolBar.setCurrentBrushSettings(size, toolBar.CurrentTool()->brushColor);
 }
 void Model::updateFPS(int otherFps)
 {

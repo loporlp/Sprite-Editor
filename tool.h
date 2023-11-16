@@ -14,61 +14,62 @@
  *
 */
 
-#ifndef PTOOL_H
-#define PTOOL_H
+#ifndef TOOL_H
+#define TOOL_H
 
 #include <QColor>
 #include <QImage>
 #include <QMouseEvent>
 #include <QObject>
 
-class PTool : public QObject
+class Tool : public QObject
 {
     Q_OBJECT
 public:
     int brushSize;
     QColor brushColor;
     // Default constructor, brush size is 1 at index 0, color is black.
-    PTool()
+    Tool()
         : brushSize(0)
         , brushColor(QColor(0, 0, 0))
     {}
-    virtual void Draw(QImage &image, QPoint pos);
-    void SetBrushSettings(int size, QColor color);
+    // Draw method, meant to be overriden by derivatives of tool.
+    virtual void draw(QImage &image, QPoint pos);
+    void setBrushSettings(int size, QColor color);
 };
 
-class PPen : public PTool
+class Pen : public Tool
 {
     Q_OBJECT
 public:
-    PPen() {}
-    void Draw(QImage &image, QPoint pos);
+    Pen() {}
+    void draw(QImage &image, QPoint pos);
 };
 
-class PEyedropper : public PTool
+class Eyedrop : public Tool
 {
     Q_OBJECT
 public:
-    PEyedropper() {}
-    void Draw(QImage &image, QPoint pos);
+    Eyedrop() {}
+    void draw(QImage &image, QPoint pos);
 signals:
     void colorRetrieved(QColor color);
 };
 
-class PEraser : public PTool
+class Eraser : public Tool
 {
     Q_OBJECT
 public:
-    PEraser() {}
-    void Draw(QImage &image, QPoint pos);
+    Eraser() {}
+    void draw(QImage &image, QPoint pos);
 };
 
-class PBucket : public PTool
+class Bucket : public Tool
 {
     Q_OBJECT
 public:
-    PBucket() {}
-    void Draw(QImage &image, QPoint pos);
+    Bucket() {}
+    void draw(QImage &image, QPoint pos);
 };
 
-#endif // PTOOL_H
+#endif // TOOL_H

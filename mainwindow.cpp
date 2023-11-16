@@ -59,22 +59,22 @@ MainWindow::~MainWindow()
 void MainWindow::connectToolButtons()
 {
     connect(ui->penButton, &QPushButton::released, this, [this]() {
-        emit selectActiveTool(Tool::Pen);
+        emit selectActiveTool(ToolType::Pen);
         highlightSelectedTool(ui->penButton);
     });
 
     connect(ui->eraserButton, &QPushButton::released, this, [this]() {
-        emit selectActiveTool(Tool::Eraser);
+        emit selectActiveTool(ToolType::Eraser);
         highlightSelectedTool(ui->eraserButton);
     });
 
     connect(ui->eyedropButton, &QPushButton::released, this, [this]() {
-        emit selectActiveTool(Tool::Eyedrop);
+        emit selectActiveTool(ToolType::Eyedrop);
         highlightSelectedTool(ui->eyedropButton);
     });
 
     connect(ui->bucketButton, &QPushButton::released, this, [this]() {
-        emit selectActiveTool(Tool::Bucket);
+        emit selectActiveTool(ToolType::Bucket);
         highlightSelectedTool(ui->bucketButton);
     });
 
@@ -357,16 +357,16 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         }
     } else {
         if (key == Qt::Key_B) {
-            emit selectActiveTool(Tool::Pen); // B: Brush
+            emit selectActiveTool(ToolType::Pen); // B: Brush
             highlightSelectedTool(ui->penButton);
         } else if (key == Qt::Key_E) {
-            emit selectActiveTool(Tool::Eraser); // E: Eraser
+            emit selectActiveTool(ToolType::Eraser); // E: Eraser
             highlightSelectedTool(ui->eraserButton);
         } else if (key == Qt::Key_I) {
-            emit selectActiveTool(Tool::Eyedrop); // I: Eyedropper
+            emit selectActiveTool(ToolType::Eyedrop); // I: Eyedropper
             highlightSelectedTool(ui->eyedropButton);
         } else if (key == Qt::Key_F) {
-            emit selectActiveTool(Tool::Bucket); // F: Bucket (Fill)
+            emit selectActiveTool(ToolType::Bucket); // F: Bucket (Fill)
             highlightSelectedTool(ui->bucketButton);
         } else if (key == Qt::Key_Space) {
             emit toggleAnimation();

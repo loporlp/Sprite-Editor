@@ -20,7 +20,7 @@
 #include <QProcess>
 #include <QTimer>
 
-#include "PEnums.h"
+#include "enums.h"
 #include "canvas.h"
 #include "ui_mainwindow.h"
 
@@ -49,7 +49,7 @@ public:
 
 signals:
     // Tool related signals
-    void selectActiveTool(Tool tool);
+    void selectActiveTool(ToolType tool);
     void selectBrushSettings(int size, QColor &color);
     void setPenColor(const QColor &color);
     void undoAction();

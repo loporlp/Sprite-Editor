@@ -7,9 +7,9 @@
 #include <QVector2D>
 #include <QLabel>
 #include <QTimer>
-#include "PToolBar.h"
-#include "PEnums.h"
-#include "PToolBar.h"
+#include "toolbar.h"
+#include "enums.h"
+#include "toolbar.h"
 
 
 class Model : public QObject
@@ -114,7 +114,7 @@ private:
 
     Frames frames;
     CanvasData canvasSettings;
-    PToolBar toolBar;
+    ToolBar toolBar;
     bool justUndid;
     int fps = 2;
     bool play = false;
@@ -154,7 +154,7 @@ public:
 public slots:
     void recieveDrawOnEvent(QImage &image, QPoint pos);
     void recievePenColor(QColor color);
-    void recieveActiveTool(Tool tool);
+    void recieveActiveTool(ToolType tool);
     void recieveBrushSettings(int size, QColor color);
     void updateFPS(int fps);
     void updatePlay(bool play);
