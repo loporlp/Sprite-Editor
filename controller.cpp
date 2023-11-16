@@ -1,11 +1,11 @@
 #include "controller.h"
-#include "canvas.h"
-#include "mainwindow.h"
-#include "model.h"
 #include <QBuffer>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include "canvas.h"
+#include "mainwindow.h"
+#include "model.h"
 
 Controller::Controller(Model &model, MainWindow &view)
     : model(model)
@@ -22,7 +22,6 @@ void Controller::setupConnections()
     setupDrawConnections();
     setupFileManagement();
     setupFrameManagement();
-
 }
 
 void Controller::setupUndoConnections()
@@ -33,9 +32,9 @@ void Controller::setupUndoConnections()
         model.addUndoStack(&currentImage);
     });
 
-//    connect(canvas, &Canvas::canvasMouseReleased, this, [this]() {
-//        model.updateFrame(&currentImage);
-//    });
+    //    connect(canvas, &Canvas::canvasMouseReleased, this, [this]() {
+    //        model.updateFrame(&currentImage);
+    //    });
 
     connect(&view, &MainWindow::undoAction, this, [this]() { model.undo(); });
     connect(&view, &MainWindow::redoAction, this, [this]() { model.redo(); });
@@ -73,52 +72,48 @@ void Controller::setupDrawConnections()
 
 void Controller::setupFileManagement()
 {
-    connect(&view, &MainWindow::saveFile, this, [this](QString fileDirectory)
-    {
-                // save the current frame before saving conventions
-                model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex()) = currentImage;
+    connect(&view, &MainWindow::saveFile, this, [this](QString fileDirectory) {
+        // save the current frame before saving conventions
+        model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex()) = currentImage;
 
-                QFile file(fileDirectory);
-                QVector<QByteArray> imageDataArray;
-                QByteArray bufferArray;
+        QFile file(fileDirectory);
+        QVector<QByteArray> imageDataArray;
+        QByteArray bufferArray;
 
-                // for every frame in the model, convert the QImage frame into
-                // an array of bytes. Add that array to a vector.
-                for(uint i = 0; i < model.getFrames().numFrames(); i++) {
-                    QBuffer buffer(&bufferArray);
-                    buffer.open(QIODevice::WriteOnly);
-                    model.getFrames().get(i).save(&buffer, "PNG");
-                    imageDataArray.push_back(bufferArray);
-                    bufferArray.clear();
-                }
+        // for every frame in the model, convert the QImage frame into
+        // an array of bytes. Add that array to a vector.
+        for (uint i = 0; i < model.getFrames().numFrames(); i++) {
+            QBuffer buffer(&bufferArray);
+            buffer.open(QIODevice::WriteOnly);
+            model.getFrames().get(i).save(&buffer, "PNG");
+            imageDataArray.push_back(bufferArray);
+            bufferArray.clear();
+        }
 
-                // add each byte array, representing QImage data, into a json Array
-                QJsonArray jsonArray;
-                for(int i = 0; i < imageDataArray.size(); i++)
-                {
-                    QJsonObject imageObject;
-                    imageObject.insert("QImage", QString(imageDataArray.at(i).toHex()));
-                    imageObject["QImage"] = QString(imageDataArray.at(i).toHex());
-                    jsonArray.insert(i, imageObject);
-                }
+        // add each byte array, representing QImage data, into a json Array
+        QJsonArray jsonArray;
+        for (int i = 0; i < imageDataArray.size(); i++) {
+            QJsonObject imageObject;
+            imageObject.insert("QImage", QString(imageDataArray.at(i).toHex()));
+            imageObject["QImage"] = QString(imageDataArray.at(i).toHex());
+            jsonArray.insert(i, imageObject);
+        }
 
-                // add the json Array into a json Document, adding that document into
-                // the new file
-                QJsonDocument jsonDoc;
-                jsonDoc.setArray(jsonArray);
-                file.open(QIODevice::WriteOnly);
-                file.write(jsonDoc.toJson());
-                file.close();
+        // add the json Array into a json Document, adding that document into
+        // the new file
+        QJsonDocument jsonDoc;
+        jsonDoc.setArray(jsonArray);
+        file.open(QIODevice::WriteOnly);
+        file.write(jsonDoc.toJson());
+        file.close();
     });
 
-    connect(&view, &MainWindow::loadFile, this, [this](QString fileDirectory)
-    {
+    connect(&view, &MainWindow::loadFile, this, [this](QString fileDirectory) {
         QFile sessionDataFile(fileDirectory);
         QString jsonString;
 
         // check if the file is actually opened
-        if(sessionDataFile.open(QIODevice::ReadOnly | QIODevice::Text))
-        {
+        if (sessionDataFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
             jsonString = sessionDataFile.readAll();
             sessionDataFile.close();
         } else {
@@ -136,8 +131,7 @@ void Controller::setupFileManagement()
         // clear out all the current frames before loading new ones
         model.getFrames().clearFrames();
 
-        for(auto imageData : imageArray) {
-
+        for (auto imageData : imageArray) {
             // extract the "QImage" hex string data from the json object.
             QString jsonString = imageData.toObject().value("QImage").toString();
 
@@ -156,11 +150,10 @@ void Controller::setupFileManagement()
         model.getCanvasSettings().setCurrentFrameIndex(0);
         currentImage = model.getFrames().get(0);
         view.canvas()->setImage(&currentImage);
-        view.addFramesToList(model.getFrames().numFrames()-1);
+        view.addFramesToList(model.getFrames().numFrames() - 1);
     });
 
-    connect(&view, &MainWindow::newFile, this, [this]()
-    {
+    connect(&view, &MainWindow::newFile, this, [this]() {
         // delete all frames and generate a default 64 x 64 frame.
         model.getFrames().clearFrames();
         model.getFrames().generateFrame(64, 64);
@@ -180,7 +173,7 @@ void Controller::setupFrameManagement()
 
         // generate a new frame and add to the canvas index.
         model.getFrames().generateFrame(currentImage.width(), currentImage.height());
-        model.getCanvasSettings().setCurrentFrameIndex(model.getFrames().numFrames()-1);
+        model.getCanvasSettings().setCurrentFrameIndex(model.getFrames().numFrames() - 1);
 
         // set the current image and update canvas
         currentImage = model.getFrames().get(model.getCanvasSettings().getCurrentFrameIndex());
@@ -188,7 +181,6 @@ void Controller::setupFrameManagement()
     });
 
     connect(&view, &MainWindow::deleteFrame, this, [this]() {
-
         uint currentFrameIndex = model.getCanvasSettings().getCurrentFrameIndex();
 
         // save the current frame
@@ -197,8 +189,8 @@ void Controller::setupFrameManagement()
         model.getFrames().remove(currentFrameIndex);
 
         // only modify the currentFrameIndex if the current frame is not the first (index 0)
-        if(currentFrameIndex > 0) {
-            model.getCanvasSettings().setCurrentFrameIndex(currentFrameIndex-1);
+        if (currentFrameIndex > 0) {
+            model.getCanvasSettings().setCurrentFrameIndex(currentFrameIndex - 1);
         }
 
         // set the current image and update canvas
@@ -234,4 +226,3 @@ void Controller::setupFrameManagement()
         view.canvas()->setImage(&currentImage);
     });
 }
-

@@ -12,16 +12,16 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
 #include <QColorDialog>
-#include <QInputDialog>
 #include <QFileDialog>
+#include <QInputDialog>
+#include <QMainWindow>
 #include <QMessageBox>
 #include <QProcess>
 
-#include "ui_mainwindow.h"
-#include "canvas.h"
 #include "PEnums.h"
+#include "canvas.h"
+#include "ui_mainwindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -99,7 +99,7 @@ private slots:
 
 public slots:
     void recieveNewColor(QColor color);
-    
+
 private:
     Ui::MainWindow *ui;
 
@@ -112,7 +112,7 @@ private:
     void initializeAnimationPreview();
 
     void connectToolButtons();
-    void highlightSelectedTool(QPushButton* button);
+    void highlightSelectedTool(QPushButton *button);
     void connectFrameButtons();
     void connectFileActions();
 

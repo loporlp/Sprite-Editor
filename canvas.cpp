@@ -20,7 +20,6 @@ Canvas::Canvas(QWidget *parent)
     , offset(QPoint(0, 0))
     , scaleFactor(8)
 {
-
     grabGesture(Qt::PinchGesture);
 }
 

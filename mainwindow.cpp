@@ -13,16 +13,16 @@
 #include <QDebug>
 #include "ui_mainwindow.h"
 
-#include <QPushButton>
-#include <QImage>
-#include <QLayout>
-#include <QObject>
-#include <QLabel>
-#include <QColor>
 #include <QApplication>
-#include <QTimer>
+#include <QColor>
+#include <QImage>
+#include <QLabel>
+#include <QLayout>
 #include <QMouseEvent>
+#include <QObject>
 #include <QPainter>
+#include <QPushButton>
+#include <QTimer>
 #include <iostream>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -87,24 +87,18 @@ void MainWindow::connectToolButtons()
     });
 
     connect(ui->eraserButton, &QPushButton::released, this, [this]() {
-       
         emit selectActiveTool(Tool::Eraser);
         highlightSelectedTool(ui->eraserButton);
-   
     });
 
     connect(ui->eyedropButton, &QPushButton::released, this, [this]() {
-       
         emit selectActiveTool(Tool::Eyedrop);
         highlightSelectedTool(ui->eyedropButton);
-   
     });
 
     connect(ui->bucketButton, &QPushButton::released, this, [this]() {
-       
         emit selectActiveTool(Tool::Bucket);
         highlightSelectedTool(ui->bucketButton);
-   
     });
 }
 
@@ -131,10 +125,7 @@ void MainWindow::connectFileActions()
     connect(ui->saveFileAction, &QAction::triggered, this, &MainWindow::saveFileAction);
     connect(ui->newFileAction, &QAction::triggered, this, &MainWindow::newFileAction);
     connect(ui->openFileAction, &QAction::triggered, this, &MainWindow::openFileAction);
-
 }
-
-
 
 //-----Tool updates-----//
 void MainWindow::colorButtonPressed()
@@ -151,18 +142,19 @@ void MainWindow::colorButtonPressed()
 
 void MainWindow::brushSizeChanged()
 {
-   emit selectBrushSettings(ui->brushSizeBox->currentIndex(), currentColor);
+    emit selectBrushSettings(ui->brushSizeBox->currentIndex(), currentColor);
 }
 
-void MainWindow::recieveNewColor(QColor color){
-   currentColor = color;
+void MainWindow::recieveNewColor(QColor color)
+{
+    currentColor = color;
 
-   const QString setColor("QPushButton { background-color : %1; }");
-   ui->selectedColorButton->setStyleSheet(setColor.arg(color.name()));
-   ui->selectedColorButton->update();
+    const QString setColor("QPushButton { background-color : %1; }");
+    ui->selectedColorButton->setStyleSheet(setColor.arg(color.name()));
+    ui->selectedColorButton->update();
 }
 
-void MainWindow::highlightSelectedTool(QPushButton* button)
+void MainWindow::highlightSelectedTool(QPushButton *button)
 {
     // Reset the style for all tool buttons
     ui->penButton->setStyleSheet("");
@@ -267,10 +259,10 @@ void MainWindow::deleteFrameButtonPressed()
     emit deleteFrame();
 
     // handle case where we are deleting the first frame in the list.
-    if(id == 0) {
+    if (id == 0) {
         ui->frameListWidget->setCurrentRow(0);
     } else {
-        ui->frameListWidget->setCurrentRow(id-1);
+        ui->frameListWidget->setCurrentRow(id - 1);
     }
 }
 
@@ -281,7 +273,7 @@ void MainWindow::moveFrameUpButtonPressed()
         return;
     emit moveFrame(id - 1, id);
     ui->frameListWidget->setCurrentRow(id - 1);
-    emit setFrame(id-1);
+    emit setFrame(id - 1);
 }
 
 void MainWindow::moveFrameDownButtonPressed()
@@ -291,7 +283,7 @@ void MainWindow::moveFrameDownButtonPressed()
         return;
     emit moveFrame(id, id + 1);
     ui->frameListWidget->setCurrentRow(id + 1);
-    emit setFrame(id+1);
+    emit setFrame(id + 1);
 }
 
 void MainWindow::frameSelected()
@@ -333,8 +325,7 @@ void MainWindow::newFileAction()
 
 void MainWindow::addFramesToList(int count)
 {
-    for(int i = 0; i < count; i++)
-    {
+    for (int i = 0; i < count; i++) {
         addFrameToList();
     }
 }

@@ -130,9 +130,7 @@ void Model::undo()
 
     frames.insert(undoBuffer.back(), getCanvasSettings().getCurrentFrameIndex());
 
-
     emit updateCanvas(undoBuffer.back());
-
 
     undoBuffer.pop_back();
 }
@@ -204,9 +202,8 @@ QVector2D Model::CanvasData::screenSpaceToImageSpace(QVector2D &screenSpace)
     return QVector2D(0.0, 0.0);
 }
 
-
-void Model::recieveDrawOnEvent(QImage &image, QPoint pos) {
-
+void Model::recieveDrawOnEvent(QImage &image, QPoint pos)
+{
     int brushSize = toolBar.CurrentTool()->brushSize;
 
     if (brushSize == 0) {
@@ -226,30 +223,28 @@ void Model::recieveDrawOnEvent(QImage &image, QPoint pos) {
     }
 }
 
-void Model::recievePenColor(QColor color){
+void Model::recievePenColor(QColor color)
+{
     toolBar.SetCurrentBrushSettings(toolBar.CurrentTool()->brushSize, color);
     emit sendColor(color);
 }
 
-void Model::recieveActiveTool(Tool tool){
-    if(tool == Tool::Pen){
+void Model::recieveActiveTool(Tool tool)
+{
+    if (tool == Tool::Pen) {
         toolBar.UpdateCurrentTool(Tool::Pen);
-    }
-    else if(tool == Tool::Eraser){
+    } else if (tool == Tool::Eraser) {
         toolBar.UpdateCurrentTool(Tool::Eraser);
-    }
-    else if(tool == Tool::Eyedrop){
+    } else if (tool == Tool::Eyedrop) {
         toolBar.UpdateCurrentTool(Tool::Eyedrop);
-    }
-    else if(tool == Tool::Bucket){
+    } else if (tool == Tool::Bucket) {
         toolBar.UpdateCurrentTool(Tool::Bucket);
     }
 }
 
-
 void Model::recieveBrushSettings(int size, QColor color)
 {
-//    toolBar.SetCurrentBrushSettings(size, color);
+    //    toolBar.SetCurrentBrushSettings(size, color);
 
     toolBar.SetCurrentBrushSettings(size, toolBar.CurrentTool()->brushColor);
 }

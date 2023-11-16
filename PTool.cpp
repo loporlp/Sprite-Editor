@@ -17,31 +17,35 @@
 #include "PTool.h"
 #include <QDebug>
 
-void PTool::Draw(QImage &image, QPoint pos){
+void PTool::Draw(QImage &image, QPoint pos)
+{
     qDebug() << "PTool Draw";
 }
 
-void PPen::Draw(QImage &image, QPoint pos){
+void PPen::Draw(QImage &image, QPoint pos)
+{
     image.setPixelColor(pos.x(), pos.y(), brushColor);
-
 }
 
-void PEyedropper::Draw(QImage &image, QPoint pos){
+void PEyedropper::Draw(QImage &image, QPoint pos)
+{
     QColor color = image.pixelColor(pos);
     emit colorRetrieved(color);
 }
 
-void PEraser::Draw(QImage &image, QPoint pos){
+void PEraser::Draw(QImage &image, QPoint pos)
+{
     // paint it white to erase!
     image.setPixelColor(pos.x(), pos.y(), QColor("white"));
-
 }
 
-void PBucket::Draw(QImage &image, QPoint pos){
+void PBucket::Draw(QImage &image, QPoint pos)
+{
     image.fill(brushColor);
 }
 
-void PTool::SetBrushSettings(int size, QColor color){
+void PTool::SetBrushSettings(int size, QColor color)
+{
     brushSize = size;
     brushColor = color;
 }
