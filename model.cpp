@@ -200,7 +200,6 @@ void Model::Frames::setFramePixel(QImage &frame, int x, int y, uint color)
  */
 void Model::updateFrame(QImage *image)
 {
-    qDebug() << "updated frame " << getCanvasSettings().getCurrentFrameIndex();
     QImage imageToUpdate = image->copy();
     frames.get(getCanvasSettings().getCurrentFrameIndex()) = imageToUpdate;
 }
@@ -464,8 +463,6 @@ void Model::playAnimationFrames()
         // Get how often to change the frame in milliseconds
         int frameTime = calculateDelay();
         int delay = 0;
-
-        qDebug() << (int)frames.numFrames();
 
         for (int i = 0; i < (int)frames.numFrames(); i++)
         {
