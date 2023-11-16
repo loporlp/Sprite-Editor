@@ -6,6 +6,8 @@
  *
  * Enums Header
  *
+ * File reviewed by: -----------
+ *
  * Brief:
  * A place for all enums for use by the project.
  *
@@ -14,7 +16,7 @@
 #ifndef ENUMS_H
 #define ENUMS_H
 
-// For defining types of tools
+/// For defining types of tools
 enum class ToolType { Pen, Eraser, Eyedrop, Bucket };
 
 #endif // ENUMS_H

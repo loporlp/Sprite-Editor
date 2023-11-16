@@ -6,24 +6,28 @@
  *
  * Model Source
  *
- * Brief:
+ * File reviewed by: -----------
  *
+ * Brief:
+ * The Model class represents the core
+ * Frame and Canvas relation logic of
+ * the Pixel Image Software Suite (PISS).
  *
 */
 
-#include "model.h"
 #include <QImage>
 #include <QLabel>
 #include <QObject>
 #include <QPixmap>
 #include <algorithm>
-
 #include <QDebug>
+
+#include "model.h"
 
 //-----Model-----//
 
 /**
- * @brief Model::getFrames
+ * @brief Model::getFrames - Returns a reference to the frames container
  * @return
  */
 Model::Frames &Model::getFrames()
@@ -32,7 +36,7 @@ Model::Frames &Model::getFrames()
 }
 
 /**
- * @brief Model::getCanvasSettings
+ * @brief Model::getCanvasSettings - Returns a reference to the canvas settings
  * @return
  */
 Model::CanvasData &Model::getCanvasSettings()
@@ -41,7 +45,7 @@ Model::CanvasData &Model::getCanvasSettings()
 }
 
 /**
- * @brief Model::Model
+ * @brief Model::Model - Constructor for the Model class
  * @param parent
  */
 Model::Model(QObject *parent)
@@ -56,7 +60,7 @@ Model::Model(QObject *parent)
 //-----Model::Frames-----//
 
 /**
- * @brief Model::Frames::Frames
+ * @brief Model::Frames::Frames - Constructor for the Frames class
  * @param width
  * @param height
  */
@@ -66,14 +70,14 @@ Model::Frames::Frames(uint width, uint height)
 }
 
 /**
- * @brief Model::Frames::Frames
+ * @brief Model::Frames::Frames - Default constructor for Frames with default size
  */
 Model::Frames::Frames()
     : Model::Frames::Frames(64, 64)
 {}
 
 /**
- * @brief Model::Frames::generateFrame
+ * @brief Model::Frames::generateFrame - Generate a new frame with the specified width and height
  * @param width
  * @param height
  */
@@ -85,7 +89,7 @@ void Model::Frames::generateFrame(int width, int height)
 }
 
 /**
- * @brief Model::Frames::numFrames
+ * @brief Model::Frames::numFrames - Returns the number of frames in our vector
  * @return
  */
 uint Model::Frames::numFrames()
@@ -94,7 +98,7 @@ uint Model::Frames::numFrames()
 }
 
 /**
- * @brief Model::Frames::get
+ * @brief Model::Frames::get - Gets the frame at a specifc indoex in our vector
  * @param index
  * @return
  */
@@ -105,7 +109,7 @@ QImage &Model::Frames::get(uint index)
 }
 
 /**
- * @brief Model::Frames::first
+ * @brief Model::Frames::first - Returns the frame at the front of our vector
  * @return
  */
 QImage Model::Frames::first()
@@ -114,7 +118,7 @@ QImage Model::Frames::first()
 }
 
 /**
- * @brief Model::Frames::last
+ * @brief Model::Frames::last - Returns the frame at the back of our vector
  * @return
  */
 QImage Model::Frames::last()
@@ -123,7 +127,7 @@ QImage Model::Frames::last()
 }
 
 /**
- * @brief Model::Frames::push
+ * @brief Model::Frames::push - Pushes back the input parameter frame into our frame vector
  * @param frame
  */
 void Model::Frames::push(QImage frame)
@@ -132,7 +136,7 @@ void Model::Frames::push(QImage frame)
 }
 
 /**
- * @brief Model::Frames::insert
+ * @brief Model::Frames::insert - Inserts the parameter frame at the specified index
  * @param frame
  * @param index
  */
@@ -142,7 +146,7 @@ void Model::Frames::insert(QImage frame, uint index)
 }
 
 /**
- * @brief Model::Frames::remove
+ * @brief Model::Frames::remove - Removes the frame at the specifc index in our frame vector
  * @param index
  */
 void Model::Frames::remove(uint index)
@@ -152,7 +156,7 @@ void Model::Frames::remove(uint index)
 }
 
 /**
- * @brief Model::Frames::pop
+ * @brief Model::Frames::pop - Pops the frame in our vector
  */
 void Model::Frames::pop()
 {
@@ -160,7 +164,7 @@ void Model::Frames::pop()
 }
 
 /**
- * @brief Model::Frames::swap
+ * @brief Model::Frames::swap - Swaps two frames in our vector at the specifed index parameters
  * @param firstIndex
  * @param secondIndex
  */
@@ -170,7 +174,7 @@ void Model::Frames::swap(int firstIndex, int secondIndex)
 }
 
 /**
- * @brief Model::Frames::clearFrames
+ * @brief Model::Frames::clearFrames - Clears our entire vector of frames
  */
 void Model::Frames::clearFrames()
 {
@@ -178,7 +182,7 @@ void Model::Frames::clearFrames()
 }
 
 /**
- * @brief Model::Frames::setFramePixel
+ * @brief Model::Frames::setFramePixel - Sets a pixel point of the specific frame with a specific color
  * @param frame
  * @param x
  * @param y
@@ -190,7 +194,7 @@ void Model::Frames::setFramePixel(QImage &frame, int x, int y, uint color)
 }
 
 /**
- * @brief Model::updateFrame
+ * @brief Model::updateFrame - Update the current frame with a new image
  * @param image
  */
 void Model::updateFrame(QImage *image)
@@ -201,7 +205,7 @@ void Model::updateFrame(QImage *image)
 }
 
 /**
- * @brief Model::addUndoStack
+ * @brief Model::addUndoStack - Adds frame image to the undo stack
  * @param image
  */
 void Model::addUndoStack(QImage *image)
@@ -216,7 +220,7 @@ void Model::addUndoStack(QImage *image)
 }
 
 /**
- * @brief Model::undo
+ * @brief Model::undo - Undo logic
  */
 void Model::undo()
 {
@@ -237,7 +241,7 @@ void Model::undo()
 }
 
 /**
- * @brief Model::redo
+ * @brief Model::redo - Redo logic
  */
 void Model::redo()
 {
@@ -258,7 +262,7 @@ void Model::redo()
 }
 
 /**
- * @brief Model::clearBuffers
+ * @brief Model::clearBuffers - Clears our undo and redo buffers
  */
 void Model::clearBuffers()
 {
@@ -269,7 +273,7 @@ void Model::clearBuffers()
 //-----Model::CanvasData-----//
 
 /**
- * @brief Model::CanvasData::CanvasData
+ * @brief Model::CanvasData::CanvasData - Constructor for the CanvasData class
  * @param canvasSize
  * @param canvasPosition
  * @param canvasZoom
@@ -282,7 +286,7 @@ Model::CanvasData::CanvasData(QVector2D canvasSize, QVector2D canvasPosition, fl
 {}
 
 /**
- * @brief Model::CanvasData::getPosition
+ * @brief Model::CanvasData::getPosition - Canvas position getter
  * @return
  */
 const QVector2D &Model::CanvasData::getPosition()
@@ -291,7 +295,7 @@ const QVector2D &Model::CanvasData::getPosition()
 }
 
 /**
- * @brief Model::CanvasData::setPosition
+ * @brief Model::CanvasData::setPosition - Canvas position setter
  * @param newPosition
  */
 void Model::CanvasData::setPosition(QVector2D newPosition)
@@ -300,7 +304,7 @@ void Model::CanvasData::setPosition(QVector2D newPosition)
 }
 
 /**
- * @brief Model::CanvasData::getZoom
+ * @brief Model::CanvasData::getZoom - Canvas zoom scale getter
  * @return
  */
 float Model::CanvasData::getZoom()
@@ -309,7 +313,7 @@ float Model::CanvasData::getZoom()
 }
 
 /**
- * @brief Model::CanvasData::setZoom
+ * @brief Model::CanvasData::setZoom - Canvas zoom scale setter
  * @param newZoom
  */
 void Model::CanvasData::setZoom(float newZoom)
@@ -318,7 +322,7 @@ void Model::CanvasData::setZoom(float newZoom)
 }
 
 /**
- * @brief Model::CanvasData::getCurrentFrameIndex
+ * @brief Model::CanvasData::getCurrentFrameIndex - Gets the index of our current frame
  * @return
  */
 uint Model::CanvasData::getCurrentFrameIndex()
@@ -327,7 +331,7 @@ uint Model::CanvasData::getCurrentFrameIndex()
 }
 
 /**
- * @brief Model::CanvasData::setCurrentFrameIndex
+ * @brief Model::CanvasData::setCurrentFrameIndex - - Gets the index of our current frame
  * @param newIndex
  */
 void Model::CanvasData::setCurrentFrameIndex(uint newIndex)
@@ -336,26 +340,26 @@ void Model::CanvasData::setCurrentFrameIndex(uint newIndex)
 }
 
 /**
- * @brief Model::CanvasData::clearCanvasData
+ * @brief Model::CanvasData::clearCanvasData - Clears index and data for our canvas
  */
 void Model::CanvasData::clearCanvasData()
 {
     indexOfCurrentFrame = 0;
 }
 
-/**
- * @brief Model::CanvasData::screenSpaceToImageSpace
- * @param screenSpace
- * @return
- */
-QVector2D Model::CanvasData::screenSpaceToImageSpace(QVector2D &screenSpace)
-{
-    qWarning("screenSpaceToImageSpace() not yet implemented");
-    return QVector2D(0.0, 0.0);
-}
+///**
+// * @brief Model::CanvasData::screenSpaceToImageSpace - Scales between screen and canvas size
+// * @param screenSpace
+// * @return
+// */
+//QVector2D Model::CanvasData::screenSpaceToImageSpace(QVector2D &screenSpace)
+//{
+//    qWarning("screenSpaceToImageSpace() not yet implemented");
+//    return QVector2D(0.0, 0.0);
+//}
 
 /**
- * @brief Model::recieveDrawOnEvent
+ * @brief Model::recieveDrawOnEvent - Receives a draw event and process it
  * @param image
  * @param pos
  */
@@ -366,7 +370,8 @@ void Model::recieveDrawOnEvent(QImage &image, QPoint pos)
     if (brushSize == 0) {
         toolBar.drawWithCurrentTool(image, pos);
     } else {
-        // Calculate and iterate of neighboring points based on the brush size
+
+        // Calculate and iterate the neighboring points based on the brush size
         for (int dx = -brushSize; dx <= brushSize; ++dx) {
             for (int dy = -brushSize; dy <= brushSize; ++dy) {
                 QPoint currentPos = pos + QPoint(dx, dy);
@@ -381,7 +386,7 @@ void Model::recieveDrawOnEvent(QImage &image, QPoint pos)
 }
 
 /**
- * @brief Model::recievePenColor
+ * @brief Model::recievePenColor - Receive a pen color and process it
  * @param color
  */
 void Model::recievePenColor(QColor color)
@@ -391,7 +396,7 @@ void Model::recievePenColor(QColor color)
 }
 
 /**
- * @brief Model::recieveActiveTool
+ * @brief Model::recieveActiveTool - Receive the active tool and process it
  * @param tool
  */
 void Model::recieveActiveTool(ToolType tool)
@@ -415,19 +420,17 @@ void Model::recieveActiveTool(ToolType tool)
 }
 
 /**
- * @brief Model::recieveBrushSettings
+ * @brief Model::recieveBrushSettings - Receive the current brush settings and process it
  * @param size
  * @param color
  */
 void Model::recieveBrushSettings(int size, QColor color)
 {
-    //    toolBar.SetCurrentBrushSettings(size, color);
-
     toolBar.setCurrentBrushSettings(size, toolBar.CurrentTool()->brushColor);
 }
 
 /**
- * @brief Model::updateFPS
+ * @brief Model::updateFPS - Update the frames per second (FPS) value
  * @param otherFps
  */
 void Model::updateFPS(int otherFps)
@@ -436,7 +439,7 @@ void Model::updateFPS(int otherFps)
 }
 
 /**
- * @brief Model::updatePlay
+ * @brief Model::updatePlay - Update the play status and handle animation accordingly
  * @param otherPlay
  */
 void Model::updatePlay(bool otherPlay)
@@ -453,7 +456,7 @@ void Model::updatePlay(bool otherPlay)
 }
 
 /**
- * @brief Model::getPlayStatus
+ * @brief Model::getPlayStatus - Returns status of if the animation is playing
  * @return
  */
 bool Model::getPlayStatus()
@@ -462,7 +465,7 @@ bool Model::getPlayStatus()
 }
 
 /**
- * @brief Model::playAnimationFrames
+ * @brief Model::playAnimationFrames - Controls the animation of the current frames
  */
 void Model::playAnimationFrames()
 {
@@ -484,7 +487,7 @@ void Model::playAnimationFrames()
 }
 
 /**
- * @brief Model::beginAnimation
+ * @brief Model::beginAnimation - Starts the animation of the current frames
  */
 void Model::beginAnimation()
 {
@@ -496,7 +499,7 @@ void Model::beginAnimation()
 }
 
 /**
- * @brief Model::endAnimation
+ * @brief Model::endAnimation - Ends the animation of the current frames
  */
 void Model::endAnimation()
 {
@@ -504,7 +507,7 @@ void Model::endAnimation()
 }
 
 /**
- * @brief Model::calculateDelay
+ * @brief Model::calculateDelay - Calculate the delay between animation frames based on the FPS
  * @return
  */
 double Model::calculateDelay()

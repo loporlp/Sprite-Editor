@@ -1,12 +1,16 @@
 /*
  * Assignment 8: Pixel Image Software Suite (PISS)
- * Class Author(s): -----------
+ * Class Author(s): Allison Walker
  * Course: CS 3505
  * Fall 2023
  *
  * MainWindow Header
  *
+ * File reviewed by: -----------
+ *
  * Brief:
+ * The main window sets up the
+ * programs front end UI and button related actions.
  *
  *
 */
@@ -36,26 +40,30 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-    // Constructor for the MainWindow class
+    /// Constructor for the MainWindow class
     explicit MainWindow(QWidget *parent = nullptr);
 
-    // Destructor for the MainWindow class
+    /// Destructor for the MainWindow class
     ~MainWindow();
 
+    /// Accessor for the canvas
     Canvas *canvas();
 
+    /// Canvas update methods
     void updateCanvas(QImage image);
     void addFramesToList(int count);
 
 signals:
-    // Tool related signals
+    /// Tool related signals
     void selectActiveTool(ToolType tool);
     void selectBrushSettings(int size, QColor &color);
     void setPenColor(const QColor &color);
+
+    /// Undo and redo signals
     void undoAction();
     void redoAction();
 
-    // Frame related signals
+    /// Frame related signals
     void setFrameToEdit(int frameIndex);
     void addFrame();
     void deleteFrame();
@@ -63,32 +71,34 @@ signals:
     void resizeCanvas(int width, int height);
     void setFrame(int frameIndex);
 
-    // Animation related signals
+    /// Animation related signals
     void startAnimation(bool play);
     void toggleAnimation();
     void setFPS(int fps);
 
-    // File related signals
+    /// File related signals
     void saveFile(const QString &filePath);
     void loadFile(const QString &filePath);
     void newFile();
 
 public slots:
-    // Animation related Slots
+    /// Animation related Slot
     void playAnimation(const QImage &frameImage);
 
 private slots:
-    // Tool related slots
+    /// Tool related slots
     void colorButtonPressed();
-    void undoButtonPressed();
-    void redoButtonPressed();
     void brushSizeChanged();
 
-    // Animation related slots
+    /// Undo and redo slots
+    void undoButtonPressed();
+    void redoButtonPressed();
+
+    /// Animation related slots
     void fpsSliderChanged(int value);
 
-    // Frame related slots
-    void updateFrameEditor(const QImage &frameImage, int editingTarget);
+    /// Frame related slots
+    //void updateFrameEditor(const QImage &frameImage, int editingTarget);
     void sizeCanvasAction();
     void addFrameToList();
     void addFrameButtonPressed();
@@ -97,7 +107,7 @@ private slots:
     void moveFrameDownButtonPressed();
     void frameSelected();
 
-    // File related slots
+    /// File related slots
     void saveFileAction();
     void openFileAction();
     void newFileAction();
@@ -115,20 +125,24 @@ private:
     bool actualSize;
     bool changed;
 
+    /// Initialization method for animation preview
     void initializeAnimationPreview();
 
+    /// Connection methods for various buttons
     void connectToolButtons();
     void highlightSelectedTool(QPushButton *button);
     void connectFrameButtons();
     void connectFileActions();
     void connectAnimationButtons();
 
+    /// Current color variable
     QColor currentColor = (QColor(Qt::black));
 
 protected:
-    /// helper method to draw when a mouse occurs.
+    /// helper method to draw when a mouse occurs
     void drawOnEvent(QMouseEvent *event);
 
+    /// Key press event
     void keyPressEvent(QKeyEvent *event);
 };
 

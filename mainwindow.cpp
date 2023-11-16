@@ -1,31 +1,20 @@
 /*
- * CS3505 HW 8
- *
- * A8: Sprite Editor Implementation
- *
- * Andrew Wilhelm, Allison Walker,
- * AJ Kennedy, Brett Baxter,
- * David Cosby, Mason Sansom
- *
-*/
-
-#include "mainwindow.h"
-/*
  * Assignment 8: Pixel Image Software Suite (PISS)
- * Class Author(s): -----------
+ * Class Author(s): Allison Walker
  * Course: CS 3505
  * Fall 2023
  *
  * MainWindow Source
  *
- * Brief:
+ * File reviewed by: -----------
+ *
+ * Brief: The main window sets up the
+ * programs front end UI and button related actions.
  *
  *
 */
 
 #include <QDebug>
-#include "ui_mainwindow.h"
-
 #include <QApplication>
 #include <QColor>
 #include <QImage>
@@ -37,6 +26,9 @@
 #include <QPushButton>
 #include <QTimer>
 #include <iostream>
+
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -58,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 /**
- * @brief MainWindow::canvas
+ * @brief MainWindow::canvas - Getter for our current canvas
  * @return
  */
 Canvas *MainWindow::canvas()
@@ -67,16 +59,15 @@ Canvas *MainWindow::canvas()
 }
 
 /**
- * @brief MainWindow::~MainWindow
+ * @brief MainWindow::~MainWindow - Destructor
  */
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
-//Connecting signals and slots
 /**
- * @brief MainWindow::connectToolButtons
+ * @brief MainWindow::connectToolButtons - Connects tool buttons to their respective slots
  */
 void MainWindow::connectToolButtons()
 {
@@ -100,16 +91,18 @@ void MainWindow::connectToolButtons()
         highlightSelectedTool(ui->bucketButton);
     });
 
+    // Connect color buttons to their respective slots
     connect(ui->colorButton, &QPushButton::released, this, &MainWindow::colorButtonPressed);
     connect(ui->selectedColorButton, &QPushButton::released, this, &MainWindow::colorButtonPressed);
 
+    // Connect other tool-related buttons to their respective slots
     connect(ui->undoButton, &QPushButton::released, this, &MainWindow::undoButtonPressed);
-    connect(ui->redoButton, &QPushButton::released, this, &MainWindow::redoButtonPressed);
+    connect(ui->redoButton, &QPushButton::released, this, &MainWindow::redoButtonPressed);   
     connect(ui->brushSizeBox, &QComboBox::currentIndexChanged, this, &MainWindow::brushSizeChanged);
 }
 
 /**
- * @brief MainWindow::connectFrameButtons
+ * @brief MainWindow::connectFrameButtons - Connect frame-related buttons to their respective slots
  */
 void MainWindow::connectFrameButtons()
 {
@@ -126,6 +119,7 @@ void MainWindow::connectFrameButtons()
             &QPushButton::released,
             this,
             &MainWindow::moveFrameDownButtonPressed);
+
     connect(ui->frameListWidget, &QListWidget::itemClicked, this, &MainWindow::frameSelected);
     connect(ui->frameListWidget, &QListWidget::itemClicked, this, [this](QListWidgetItem *item) {
         emit setFrameToEdit(item->data(0).toInt());
@@ -133,20 +127,18 @@ void MainWindow::connectFrameButtons()
 }
 
 /**
- * @brief MainWindow::connectAnimationButtons
+ * @brief MainWindow::connectAnimationButtons - Connect animation-related buttons to their respective slots
  */
 void MainWindow::connectAnimationButtons()
 {
     connect(ui->playButton, &QPushButton::released, this, [this]() { emit startAnimation(true); });
     connect(ui->pauseButton, &QPushButton::released, this, [this]() { emit startAnimation(false); });
     connect(ui->fpsSlider, &QSlider::valueChanged, this, &MainWindow::fpsSliderChanged);
-    connect(ui->actualSizeCheckBox, &QCheckBox::clicked, this, [this]() {
-        emit startAnimation(true);
-    });
+    //connect(ui->actualSizeCheckBox, &QCheckBox::isChecked, this, [this]() { emit startAnimation(true); });
 }
 
 /**
- * @brief MainWindow::connectFileActions
+ * @brief MainWindow::connectFileActions - Connect file-related actions to their respective slots
  */
 void MainWindow::connectFileActions()
 {
@@ -159,22 +151,24 @@ void MainWindow::connectFileActions()
 //-----Tool updates-----//
 
 /**
- * @brief MainWindow::colorButtonPressed
+ * @brief MainWindow::colorButtonPressed - Actions for when colorButton is pressed
  */
 void MainWindow::colorButtonPressed()
 {
+    // Open a color dialog and emit the selected color
     QColor color = QColorDialog::getColor();
     emit setPenColor(color);
 
     currentColor = color;
 
+    // Set the background color of the selected color button
     const QString setColor("QPushButton { background-color : %1; }");
     ui->selectedColorButton->setStyleSheet(setColor.arg(color.name()));
     ui->selectedColorButton->update();
 }
 
 /**
- * @brief MainWindow::brushSizeChanged
+ * @brief MainWindow::brushSizeChanged - Emits the brush size and color when the brush size is changed
  */
 void MainWindow::brushSizeChanged()
 {
@@ -182,7 +176,7 @@ void MainWindow::brushSizeChanged()
 }
 
 /**
- * @brief MainWindow::recieveNewColor
+ * @brief MainWindow::recieveNewColor - Update the current color and the background color of the selected color button
  * @param color
  */
 void MainWindow::recieveNewColor(QColor color)
@@ -195,12 +189,12 @@ void MainWindow::recieveNewColor(QColor color)
 }
 
 /**
- * @brief MainWindow::highlightSelectedTool
+ * @brief MainWindow::highlightSelectedTool - Highlights the active tool button when clicked
  * @param button
  */
 void MainWindow::highlightSelectedTool(QPushButton *button)
 {
-    // Reset the style for all tool buttons
+    // Reset the styleSheet for all tool buttons
     ui->penButton->setStyleSheet("");
     ui->eraserButton->setStyleSheet("");
     ui->eyedropButton->setStyleSheet("");
@@ -213,7 +207,7 @@ void MainWindow::highlightSelectedTool(QPushButton *button)
 }
 
 /**
- * @brief MainWindow::undoButtonPressed
+ * @brief MainWindow::undoButtonPressed - Emit the undo action signal
  */
 void MainWindow::undoButtonPressed()
 {
@@ -221,7 +215,7 @@ void MainWindow::undoButtonPressed()
 }
 
 /**
- * @brief MainWindow::updateCanvas
+ * @brief MainWindow::updateCanvas - Update the canvas with the provided image
  * @param image
  */
 void MainWindow::updateCanvas(QImage image)
@@ -230,7 +224,7 @@ void MainWindow::updateCanvas(QImage image)
 }
 
 /**
- * @brief MainWindow::redoButtonPressed
+ * @brief MainWindow::redoButtonPressed - Emit the redo action signal
  */
 void MainWindow::redoButtonPressed()
 {
@@ -240,25 +234,27 @@ void MainWindow::redoButtonPressed()
 //-----Animation updates-----//
 
 /**
- * @brief MainWindow::initializeAnimationPreview
+ * @brief MainWindow::initializeAnimationPreview - Initialize the animation preview with an empty frame
  */
 void MainWindow::initializeAnimationPreview()
 {
     QPixmap p = QPixmap(ui->animationScreen->size());
     p.fill(QColor(Qt::white));
     ui->animationScreen->setPixmap(p);
-    ui->frameListWidget->setIconSize(QSize(50, 50));
+    //ui->frameListWidget->setIconSize(QSize(50, 50));
+
     addFrameToList();
 }
 
 /**
- * @brief MainWindow::playAnimation
+ * @brief MainWindow::playAnimation - Display the animation by updating the animation screen with the current frame
  * @param frameImage
  */
 void MainWindow::playAnimation(const QImage &frameImage)
 {
     QPixmap p;
-    if (actualSize) {
+//    if (actualSize) {
+    if (ui->actualSizeCheckBox->isChecked()) {
         p = QPixmap::fromImage(frameImage);
     } else {
         p = QPixmap::fromImage(frameImage.scaled(ui->animationScreen->size(), Qt::KeepAspectRatio));
@@ -267,7 +263,7 @@ void MainWindow::playAnimation(const QImage &frameImage)
 }
 
 /**
- * @brief MainWindow::fpsSliderChanged
+ * @brief MainWindow::fpsSliderChanged - Handle the change in FPS (frames per second) by updating the FPS label and emitting the new FPS value
  * @param value
  */
 void MainWindow::fpsSliderChanged(int value)
@@ -277,7 +273,7 @@ void MainWindow::fpsSliderChanged(int value)
 }
 
 /**
- * @brief MainWindow::receiveAnimationFrameData
+ * @brief MainWindow::receiveAnimationFrameData - Receive animation frame data and play the frame with a delay
  * @param frame
  * @param delay
  */
@@ -288,31 +284,32 @@ void MainWindow::receiveAnimationFrameData(QImage frame, int delay)
 
 //-----Frame updates-----//
 
-/**
- * @brief MainWindow::updateFrameEditor
- * @param frameImage
- * @param editingTarget
- */
-void MainWindow::updateFrameEditor(const QImage &frameImage, int editingTarget)
-{
-    image = frameImage;
-    QPixmap p = QPixmap::fromImage(frameImage.scaled(QSize(50, 50), Qt::KeepAspectRatio));
-    frameList.at(editingTarget)->setIcon(QIcon(p));
-    update();
-    changed = true;
-}
+///**
+// * @brief MainWindow::updateFrameEditor - Update the frame editor by displaying the image of the frame and marking it as changed
+// * @param frameImage
+// * @param editingTarget
+// */
+//void MainWindow::updateFrameEditor(const QImage &frameImage, int editingTarget)
+//{
+//    image = frameImage;
+//    QPixmap p = QPixmap::fromImage(frameImage.scaled(QSize(50, 50), Qt::KeepAspectRatio));
+//    frameList.at(editingTarget)->setIcon(QIcon(p));
+//    update();
+//    changed = true;
+//}
 
 /**
- * @brief MainWindow::sizeCanvasAction
+ * @brief MainWindow::sizeCanvasAction - Handle the action of resizing the canvas by prompting the user for a new canvas size and emitting the new size
  */
 void MainWindow::sizeCanvasAction()
 {
-    int size = QInputDialog::getInt(this, "Canvas Size", "Set Canvas Size");
+
+    int size = QInputDialog::getInt(this, "Canvas Size", "Set Canvas Size", 64, 8, 128, 8);
     emit resizeCanvas(size, size);
 }
 
 /**
- * @brief MainWindow::addFrameToList
+ * @brief MainWindow::addFrameToList - Add a new frame to the frame list and set it as the current item
  */
 void MainWindow::addFrameToList()
 {
@@ -324,7 +321,7 @@ void MainWindow::addFrameToList()
 }
 
 /**
- * @brief MainWindow::addFrameButtonPressed
+ * @brief MainWindow::addFrameButtonPressed - Handle the action of adding a new frame by adding it to the list and emitting the signal to add a frame
  */
 void MainWindow::addFrameButtonPressed()
 {
@@ -333,7 +330,7 @@ void MainWindow::addFrameButtonPressed()
 }
 
 /**
- * @brief MainWindow::deleteFrameButtonPressed
+ * @brief MainWindow::deleteFrameButtonPressed -  Handle the action of deleting a frame by removing it from the list and emitting the signal to delete a frame
  */
 void MainWindow::deleteFrameButtonPressed()
 {
@@ -352,7 +349,7 @@ void MainWindow::deleteFrameButtonPressed()
 
     emit deleteFrame();
 
-    // handle case where we are deleting the first frame in the list.
+    // Handles the case where we are deleting the first frame in the list
     if (id == 0) {
         ui->frameListWidget->setCurrentRow(0);
     } else {
@@ -361,7 +358,7 @@ void MainWindow::deleteFrameButtonPressed()
 }
 
 /**
- * @brief MainWindow::moveFrameUpButtonPressed
+ * @brief MainWindow::moveFrameUpButtonPressed - Handle the action of moving a frame up by emitting the signal to move the frame up and updating the current row
  */
 void MainWindow::moveFrameUpButtonPressed()
 {
@@ -374,7 +371,7 @@ void MainWindow::moveFrameUpButtonPressed()
 }
 
 /**
- * @brief MainWindow::moveFrameDownButtonPressed
+ * @brief MainWindow::moveFrameDownButtonPressed - Handle the action of moving a frame down by emitting the signal to move the frame down and updating the current row
  */
 void MainWindow::moveFrameDownButtonPressed()
 {
@@ -387,7 +384,7 @@ void MainWindow::moveFrameDownButtonPressed()
 }
 
 /**
- * @brief MainWindow::frameSelected
+ * @brief MainWindow::frameSelected - Handle the action of selecting a frame by emitting the signal to set the current frame
  */
 void MainWindow::frameSelected()
 {
@@ -398,7 +395,7 @@ void MainWindow::frameSelected()
 //-----File updates-----//
 
 /**
- * @brief MainWindow::saveFileAction
+ * @brief MainWindow::saveFileAction - Handle the action of saving a file by prompting the user for a file directory and emitting the signal to save the file
  */
 void MainWindow::saveFileAction()
 {
@@ -411,7 +408,7 @@ void MainWindow::saveFileAction()
 }
 
 /**
- * @brief MainWindow::openFileAction
+ * @brief MainWindow::openFileAction - Handle the action of opening a file by prompting the user for a file directory and emitting the signal to load the file
  */
 void MainWindow::openFileAction()
 {
@@ -426,7 +423,7 @@ void MainWindow::openFileAction()
 }
 
 /**
- * @brief MainWindow::newFileAction
+ * @brief MainWindow::newFileAction - Handle the action of creating a new file by clearing the frame list and emitting the signal to create a new file
  */
 void MainWindow::newFileAction()
 {
@@ -437,7 +434,7 @@ void MainWindow::newFileAction()
 }
 
 /**
- * @brief MainWindow::addFramesToList
+ * @brief MainWindow::addFramesToList - Add a specified number of frames to the frame list
  * @param count
  */
 void MainWindow::addFramesToList(int count)
@@ -448,7 +445,7 @@ void MainWindow::addFramesToList(int count)
 }
 
 /**
- * @brief MainWindow::keyPressEvent
+ * @brief MainWindow::keyPressEvent - Key press events
  * @param event
  */
 void MainWindow::keyPressEvent(QKeyEvent *event)

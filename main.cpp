@@ -1,8 +1,8 @@
+#include <QApplication>
+
 #include "controller.h"
 #include "mainwindow.h"
 #include "model.h"
-
-#include <QApplication>
 
 int main(int argc, char *argv[])
 {

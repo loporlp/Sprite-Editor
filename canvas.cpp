@@ -6,24 +6,29 @@
  *
  * Canvas Source
  *
+ * File reviewed by: -----------
+ *
  * Brief:
+ * The Canvas class is responsible
+ * for handling image display and user interactions.
  *
  *
 */
 
-#include "canvas.h"
 #include <QLabel>
 #include <QMouseEvent>
 #include <QPinchGesture>
 #include <QStyle>
 #include <QVBoxLayout>
 
-/// Qt lags quite a bit when trying to render an image scaled too large.
+#include "canvas.h"
+
+/// Qt lags quite a bit when trying to render an image scaled too large
 const float MAX_ZOOM = 100;
 /// How many pixels to move the canvas when the user presses one of the arrow keys
 const int KEYBOARD_MOVE_PIXEL_STEP = 1;
 /// How many pixels to move the canvas when the user presses one of the arrow keys
-/// with the shift key held down.
+/// with the shift key held down
 const int KEYBOARD_MOVE_PIXEL_STEP_SHIFT = 8;
 
 /**
@@ -43,7 +48,7 @@ Canvas::Canvas(QWidget *parent)
 /**
  * @brief Canvas::setImage - Updates which image is being displayed on the canvas.
  * Immediately refreshes by calling `update()`
- * @param image
+ * @param image - The current frame image to set as canvas
  */
 void Canvas::setImage(QImage *image)
 {
@@ -52,11 +57,10 @@ void Canvas::setImage(QImage *image)
     update();
 }
 
-
 /**
  * @brief Canvas::setScale - Updates the scale, or zoom factor, of the canvas. A scale 8 means a 1x1
- * sprite pixel will take up 8x8 pixels onscreen.
- * @param newScale
+ * sprite pixel will take up 8x8 pixels onscreen
+ * @param newScale - New scaling factor
  */
 void Canvas::setScale(float newScale)
 {
@@ -65,8 +69,8 @@ void Canvas::setScale(float newScale)
 
 /**
  * @brief Canvas::setOffset - Updates the offset position of the canvas for panning. (0, 0) will put the top-left
- * corner of the displayed image in the top-left corner of the frame.
- * @param newOffset
+ * corner of the displayed image in the top-left corner of the frame
+ * @param newOffset - New offset factor
  */
 void Canvas::setOffset(QPoint newOffset)
 {
@@ -76,7 +80,7 @@ void Canvas::setOffset(QPoint newOffset)
 /**
  * @brief Canvas::update - refresh our rendering of the frame. If any changes have been made to offset,
  * scaleFactor, or the image being displayed, this method needs to be called before
- * you'll see anything appear on screen.
+ * you'll see anything appear on screen
  */
 void Canvas::update()
 {
@@ -93,13 +97,13 @@ void Canvas::update()
 /**
  * @brief Canvas::canvasToSpriteSpace - Maps a coordinate in canvas space (meaning the top left position of the canvas
  * viewport frame is (0, 0) and the bottom right is (canvas.width, canvas.height))
- * to the respective coordinates of the sprite being rendered in the canvas.
+ * to the respective coordinates of the sprite being rendered in the canvas
  *
  * So for example, if the mouse is over a certain red pixel in the sprite, this method
  * will return the QPoint where y is the row and x is the column where that red pixel
- * is stored in the original sprite grid, if given the mouse position in the canvas.
- * @param canvasSpace
- * @return
+ * is stored in the original sprite grid, if given the mouse position in the canvas
+ * @param canvasSpace - The point on the canvas to scale with
+ * @return Returns the QPoint stored relative in the original sprite grid
  */
 QPoint Canvas::canvasToSpriteSpace(QPoint canvasSpace)
 {
@@ -112,18 +116,17 @@ QPoint Canvas::canvasToSpriteSpace(QPoint canvasSpace)
 
 /**
  * @brief Canvas::mousePressEvent - Called when a mousePressEvent is detected and emits the `canvasMousePressed()`
- * that maps the mouse position to sprite coordinates, for use by the controller.
+ * that maps the mouse position to sprite coordinates, for use by the controller
  * @param event
  */
 void Canvas::mousePressEvent(QMouseEvent *event)
 {
-    // should probably introduce some bounds checking here
     emit canvasMousePressed(canvasToSpriteSpace(event->pos()));
 }
 
 /**
  * @brief Canvas::mouseMoveEvent - Called when a mouseMoveEvent is detected and emits the `canvasMouseMoved()`
- * that maps the mouse position to sprite coordinates, for use by the controller.
+ * that maps the mouse position to sprite coordinates, for use by the controller
  * @param event
  */
 void Canvas::mouseMoveEvent(QMouseEvent *event)
@@ -131,10 +134,9 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
     emit canvasMouseMoved(canvasToSpriteSpace(event->pos()));
 }
 
-
 /**
  * @brief Canvas::mouseReleaseEvent - Called when a mouseReleaseEvent is detected and emits the `canvasMouseReleased()`
- * that maps the mouse position to sprite coordinates, for use by the controller.
+ * that maps the mouse position to sprite coordinates, for use by the controller
  * @param event
  */
 void Canvas::mouseReleaseEvent(QMouseEvent *event)
@@ -142,10 +144,9 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
     emit canvasMouseReleased(canvasToSpriteSpace(event->pos()));
 }
 
-
 /**
  * @brief Canvas::wheelEvent - Called when the user inputs to a horizontal or vertical scroll action to pan the
- * canvas around. Touchpad scrolling is included in that.
+ * canvas around. Touchpad scrolling is included in that
  * @param event
  */
 void Canvas::wheelEvent(QWheelEvent *event)
@@ -154,13 +155,12 @@ void Canvas::wheelEvent(QWheelEvent *event)
     this->update();
 }
 
-
 /**
  * @brief Canvas::gestureEvent - Captures and processes gesture events, which are touch inputs. Really just serves
- * to route gestures of different types to their proper method.
+ * to route gestures of different types to their proper method
  *
  **Note:** `Canvas::event()` will only recognize a gesture if you use
- **`grabGesture(GestureType)` in the canvas constructor, as per Qt's funkiness.
+ **`grabGesture(GestureType)` in the canvas constructor, as per Qt's funkiness
  * @param event
  */
 void Canvas::gestureEvent(QGestureEvent *event)
@@ -172,7 +172,7 @@ void Canvas::gestureEvent(QGestureEvent *event)
 }
 
 /**
- * @brief Canvas::pinchEvent - Processes pinch gestues for zooming. Zooms in or out at the mouse position.
+ * @brief Canvas::pinchEvent - Processes pinch gestues for zooming. Zooms in or out at the mouse position
  * @param event
  */
 void Canvas::pinchEvent(QPinchGesture *event)
@@ -182,9 +182,9 @@ void Canvas::pinchEvent(QPinchGesture *event)
 
 /**
  * @brief Canvas::zoomAtPoint - Updates the canvas's scaleFactor and offset so that the pixel underneath the
- * coordinate `centerPoint` when the user begins zooming stays fixed in place.
- * @param scaleFactorMultiplier
- * @param centerPoint
+ * coordinate `centerPoint` when the user begins zooming stays fixed in place
+ * @param scaleFactorMultiplier - Zoom scale factor
+ * @param centerPoint - Point where the user begins zooming
  */
 void Canvas::zoomAtPoint(float scaleFactorMultiplier, QPointF centerPoint)
 {
@@ -202,7 +202,6 @@ void Canvas::zoomAtPoint(float scaleFactorMultiplier, QPointF centerPoint)
     update();
 }
 
-
 /**
  * @brief Canvas::keyPressEvent - Processes key-down inputs to allow the user to move the canvas around with
  * arrow keys. When shift is held down, the number of pixels moved per input changes
@@ -210,7 +209,7 @@ void Canvas::zoomAtPoint(float scaleFactorMultiplier, QPointF centerPoint)
  *
  * Since only one widget can listen to keyboard inputs at a time, and the MainWindow
  * needs to listen for Undo/Redo actions, the event is caught in `MainWindow::keyPressEvent`
- * and piped here.
+ * and piped here
  * @param event
  */
 void Canvas::keyPressEvent(QKeyEvent *event)
@@ -261,7 +260,7 @@ void Canvas::keyPressEvent(QKeyEvent *event)
  * event method :/
  *
  * Detects what type of event the user is inputting, and calls the appropriate handler
- * method for inputs of that type, passing in the event after appropriately casted.
+ * method for inputs of that type, passing in the event after appropriately casted
  * @param event
  * @return
  */

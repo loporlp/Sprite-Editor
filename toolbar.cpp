@@ -6,6 +6,8 @@
  *
  * PToolBar Source
  *
+ * File reviewed by: -----------
+ *
  * Brief:
  * The PToolBar manages the different types of tools available
  * in PISS. It stores one of each type of tool and a pointer to
@@ -13,8 +15,9 @@
  *
 */
 
-#include "toolbar.h"
 #include <QDebug>
+
+#include "toolbar.h"
 
 Tool* ToolBar::CurrentTool()
 {
@@ -22,7 +25,7 @@ Tool* ToolBar::CurrentTool()
 }
 
 /**
- * @brief PToolBar::DrawWithCurrentTool - Draws with the currently selected tool.
+ * @brief PToolBar::DrawWithCurrentTool - Draws with the currently selected tool
  */
 void ToolBar::drawWithCurrentTool(QImage &image, QPoint pos)
 {
@@ -31,8 +34,8 @@ void ToolBar::drawWithCurrentTool(QImage &image, QPoint pos)
 }
 
 /**
- * @brief PToolBar::UpdateCurrentTool - Changes the current tool.
- * @param tool - The new tool to set.
+ * @brief PToolBar::UpdateCurrentTool - Changes the current tool
+ * @param tool - The new tool to set
  */
 void ToolBar::updateCurrentTool(ToolType tool)
 {
@@ -57,9 +60,9 @@ void ToolBar::updateCurrentTool(ToolType tool)
 }
 
 /**
- * @brief PToolBar::UpdateBrushSettings - Update the current brush settings.
- * @param size - The new brush size.
- * @param color - The new brush color.
+ * @brief PToolBar::UpdateBrushSettings - Update the current brush settings
+ * @param size - The new brush size
+ * @param color - The new brush color
  */
 void ToolBar::setCurrentBrushSettings(int size, QColor color)
 {
@@ -67,7 +70,7 @@ void ToolBar::setCurrentBrushSettings(int size, QColor color)
 }
 
 /**
- * @brief ToolBar::SetPenBrushColor - Sets all tool colors to the param color, for use with eyedropper.
+ * @brief ToolBar::SetPenBrushColor - Sets all tool colors to the param color, for use with eyedropper
  * @param color - The new brush color
  */
 void ToolBar::setPenBrushColor(QColor color)

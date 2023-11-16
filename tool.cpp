@@ -6,6 +6,8 @@
  *
  * PTool Source
  *
+ * File reviewed by: -----------
+ *
  * Brief:
  * The PTool is the base class that all tools will
  * inherit from. It has a base brush size and color, a way to set
@@ -14,11 +16,12 @@
  *
 */
 
-#include "tool.h"
 #include <QDebug>
 
+#include "tool.h"
+
 /**
- * @brief Tool::Draw This method is the base method meant to be overwritten.
+ * @brief Tool::Draw This method is the base method meant to be overwritten
  * @param image - the image to draw on
  * @param pos - the position on the image to draw on
  */
@@ -28,7 +31,7 @@ void Tool::draw(QImage &image, QPoint pos)
 }
 
 /**
- * @brief Pen::Draw - Sets the pixel color at the position to the current brush color.
+ * @brief Pen::Draw - Sets the pixel color at the position to the current brush color
  * @param image - the image to draw on
  * @param pos - the position on the image to draw on
  */
@@ -38,7 +41,7 @@ void Pen::draw(QImage &image, QPoint pos)
 }
 
 /**
- * @brief Pen::Draw - Gets the pixel color at the position, sends a signal for the toolbelt to change the tool colors.
+ * @brief Pen::Draw - Gets the pixel color at the position, sends a signal for the toolbelt to change the tool colors
  * @param image - the image to draw on
  * @param pos - the position on the image to draw on
  */
@@ -49,7 +52,7 @@ void Eyedrop::draw(QImage &image, QPoint pos)
 }
 
 /**
- * @brief Pen::Draw - Sets the pixel color at the position to the white, effectively erasing it.
+ * @brief Pen::Draw - Sets the pixel color at the position to the white, effectively erasing it
  * @param image - the image to draw on
  * @param pos - the position on the image to draw on
  */
@@ -60,7 +63,7 @@ void Eraser::draw(QImage &image, QPoint pos)
 }
 
 /**
- * @brief Pen::Draw - Changes the image color to the bucket color.
+ * @brief Pen::Draw - Changes the image color to the bucket color
  * @param image - the image to draw on
  * @param pos - the position on the image to draw on
  */
@@ -70,7 +73,7 @@ void Bucket::draw(QImage &image, QPoint pos)
 }
 
 /**
- * @brief Tool::SetBrushSettings - Changes the tool settings.
+ * @brief Tool::SetBrushSettings - Changes the tool settings
  * @param size - The new size for the brush
  * @param color - The new color for the brush
  */
